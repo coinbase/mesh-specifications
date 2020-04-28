@@ -1,4 +1,4 @@
-.PHONY: deps gen add-license check-license spellcheck shellcheck salus
+.PHONY: deps gen validate add-license check-license spellcheck shellcheck salus
 LICENCE_SCRIPT=addlicense -c "Coinbase, Inc." -l "apache" -v
 
 deps:
@@ -8,6 +8,9 @@ deps:
 
 gen:
 	./codegen.sh;
+
+validate:
+	./validate.sh
 
 add-license:
 	${LICENCE_SCRIPT} .
@@ -23,8 +26,5 @@ shellcheck:
 
 salus:
 	docker run --rm -t -v ${PWD}:/home/repo coinbase/salus
-
-validate:
-	./validate.sh
 
 release: shellcheck spellcheck validate add-license salus
