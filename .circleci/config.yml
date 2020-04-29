@@ -1,0 +1,52 @@
+# Copyright 2020 Coinbase, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+version: 2.1
+jobs:
+  check-license:
+    docker:
+      - image: circleci/golang:1.13
+    steps:
+      - checkout
+      - run: make go-deps
+      - run: make check-license
+  check-spelling:
+    docker:
+      - image: circleci/golang:1.13
+    steps:
+      - checkout
+      - run: make go-deps
+      - run: make spellcheck 
+  validate:
+    docker:
+      - image: circleci/node:12
+      - user: root
+    steps:
+      - checkout
+      - run: make node-deps
+      - run: make validate
+  salus:
+    machine: true
+    steps:
+      - checkout
+      - run: docker run -t -v $(pwd):/home/repo coinbase/salus
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - check-license
+      - check-spelling
+      - validate
+      - salus

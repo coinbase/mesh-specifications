@@ -1,0 +1,48 @@
+# Copyright 2020 Coinbase, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+description: |
+  The Version object is utilized to inform the client
+  of the versions of different components of the Rosetta
+  implementation.
+type: object
+required:
+  - rosetta_version
+  - node_version
+properties:
+  rosetta_version:
+    description: |
+      The rosetta_version is the version of the Rosetta interface
+      the implementation adheres to. This can be useful for clients
+      looking to reliably parse responses.
+    type: string
+    example: "1.2.5"
+  node_version:
+    description: |
+      The node_version is the canonical version of the node
+      runtime. This can help clients manage deployments.
+    type: string
+    example: "1.0.2"
+  middleware_version:
+    description: |
+      When a middleware server is used to adhere to the Rosetta
+      interface, it should return its version here. This can help
+      clients manage deployments.
+    type: string
+    example: "0.2.7"
+  metadata:
+    description: |
+      Any other information that may be useful about versioning
+      of dependent services should be returned here.
+    type: object
