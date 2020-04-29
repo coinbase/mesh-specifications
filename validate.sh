@@ -20,10 +20,15 @@ swagger-cli validate api.json;
 # Ensure specification includes all changes
 ./codegen.sh api_test.json;
 
-DIFF_RESULT="$(diff api.json api_test.json)"
+EXIT_STATUS=0
+if cmp -s api.json api_test.json; then
+  echo No difference found
+else
+  echo ERROR: difference detected between api.json and YAML files
+  EXIT_STATUS=1
+fi
+
+# Remove test file
 rm api_test.json;
 
-if [ "${DIFF_RESULT}" != 0 ]; then
-  echo ERROR: difference detected between api.json and YAML files
-  exit 1
-fi
+exit "${EXIT_STATUS}"

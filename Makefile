@@ -11,10 +11,10 @@ go-deps:
 deps: node-deps go-deps
 
 gen:
-	./codegen.sh;
+	./codegen.sh api.json;
 
 validate:
-	./validate.sh
+	./validate.sh;
 
 add-license:
 	${LICENCE_SCRIPT} .
