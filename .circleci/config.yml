@@ -31,7 +31,7 @@ jobs:
   validate:
     docker:
       - image: circleci/node:12
-      - user: root
+        user: root
     steps:
       - checkout
       - run: make node-deps
