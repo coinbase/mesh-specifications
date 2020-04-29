@@ -24,8 +24,8 @@ EXIT_STATUS=0
 if cmp -s api.json api_test.json; then
   echo No difference found
 else
-  echo ERROR: difference detected between api.json and YAML files
-  EXIT_STATUS=1
+  EXIT_STATUS=$?
+  echo ERROR ${EXIT_STATUS}: difference detected between api.json and YAML files
 fi
 
 # Remove test file
