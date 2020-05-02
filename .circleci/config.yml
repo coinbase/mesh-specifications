@@ -28,19 +28,19 @@ jobs:
       - checkout
       - run: make go-deps
       - run: make spellcheck 
-  validate:
+  check-gen:
     docker:
       - image: circleci/node:12
         user: root
     steps:
       - checkout
       - run: make node-deps
-      - run: make validate
+      - run: make check-gen
   salus:
     machine: true
     steps:
       - checkout
-      - run: docker run -t -v $(pwd):/home/repo coinbase/salus
+      - run: make salus
 
 workflows:
   version: 2
@@ -48,5 +48,5 @@ workflows:
     jobs:
       - check-license
       - check-spelling
-      - validate
+      - check-gen
       - salus

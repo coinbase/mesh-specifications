@@ -29,11 +29,7 @@ case "${OS}" in
         ;;
 esac
 
-OUTPUT_FILE=$1
-if [ "${OUTPUT_FILE}" == "" ]; then
-  echo ERROR: OUTPUT_FILE not specified
-  exit 1
-fi
+OUTPUT_FILE=api.json
 
 # Bundle yaml
 swagger-cli bundle api.yaml -o "${OUTPUT_FILE}";
