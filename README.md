@@ -100,11 +100,13 @@ empowers any integrator to build abstractions on top of the
 that the Rosetta API exposes.
 
 ## SDKs in More Languages
-We've spent a lot of time polishing and building on top of [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). At Coinbase, we write
-most of our code in Golang so this was the natural choice for us to invest our time and resources. We'd love to see implementations
-in Rust and JavaScript/TypeScript as many new blockchains use Rust and many developers rely on JavaScript/TypeScript.
+At Coinbase, we write a lot of our code in Golang. We knew we could build a great SDK in Golang
+so we put all of our effort into developing the [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go).
 
-If you write an implementation of an SDK in another language, please reach out on the [Ecosystem](https://community.rosetta-api.org/c/ecosystem).
+We look forward to working with the community to develop just as powerful of an SDK in both
+Rust and JavaScript/TypeScript. If you'd like to work on SDKs in either of these languages,
+let us know on the [community forum](https://community.rosetta-api.org). We may feature
+a few of these completed SDKs on the [website](https://www.rosetta-api.org) or on this README.
 
 ## Specification Development
 * `make deps` to install dependencies
