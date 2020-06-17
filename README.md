@@ -60,7 +60,7 @@ how to write an implementation using this package in [rosetta-sdk-go](https://gi
 If you plan to use a language other than Golang, you will need to either codegen
 a server (the [overview](#overview) mentions some tools that can help with this) or
 write one from scratch. If you do choose to write an implementation in another language,
-we ask that you create a seperate repository in an SDK-like format for all the code you generate
+we ask that you create a separate repository in an SDK-like format for all the code you generate
 so that other developers can use it (see the note on [SDKs in more languages](#sdks-in-more-languages)). Check out
 [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go) for an example of how to generate
 code from this specification.
