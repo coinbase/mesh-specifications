@@ -57,8 +57,12 @@ There is a simple [example](https://github.com/coinbase/rosetta-sdk-go/tree/mast
 how to write an implementation using this package in [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go).
 
 ### Using Another Language
-To use any other language, we recommend generating basic types and a server framework
-using
+If you plan to use a language other than Golang, you will need to either codegen
+a server (the [overview](#overview) mentions some tools that help with this) or
+write one from scratch. If you do choose to write an implementation in another language,
+we ask that you create a seperate repository for all the code you generate so that other
+developers can use it. Check out [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go)
+for an example of how to generate code from this specification.
 
 ## Validating Your Implementation
 To validate your implementation, check out the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
