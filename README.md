@@ -74,14 +74,30 @@ If you'd like to add more checks for correctness, feel free to [create an issue]
 in detail what you think should be checked in any implementation.
 
 ## Writing an Integration
-To write an integration with a Rosetta API implementation, we recommend using [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). There
-are examples using 2 different packages and a ton of examples in the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
+Before starting your own integration, we recommend reading this [blog post](https://www.rosetta-api.org/blog/2020/06/17/1-try-celo-rosetta.html) that
+walks through how to fetch blocks from a Celo Rosetta API implementation.
 
-Take a look at the [blog](https://www.rosetta-api.org/blog/2020/06/17/1-try-celo-rosetta.html) explaining how
-to fetch blocks from Celo.
+The most developed tools for working with Rosetta API implementations can
+be found in [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). Below,
+we highlight 2 packages in this repository that are very useful for parsing
+data from a blockchain. You can find code examples of these packages throughout
+the [rosetta-cli](https://github.com/coinbase/rosetta-cli), which uses `rosetta-sdk-go`
+for all block processing.
 
-### Syncing Package
-In particular, integrators will likely be interested in the `syncer` package that can be found in the `rosett-sdk-go`.
+### Syncer
+The core of any integration is syncing blocks reliably. The [syncer](https://github.com/coinbase/rosetta-sdk-go/tree/master/syncer)
+serially processes blocks from a Node API implementation (automatically handling re-orgs) with
+user-defined handling logic and storage. After a block is processed, store it to a DB or send a push
+notification...it's up to you!
+
+### Parser
+When reading the operations in a block, it can be helpful to apply higher-level
+groupings to related operations or match operations in a transaction to some
+set of generic descriptions (i.e. ensure there are 2 operations of equal but
+opposite amounts). The [parser](https://github.com/coinbase/rosetta-sdk-go/tree/master/parser)
+empowers any integrator to build abstractions on top of the
+[low-level building blocks](https://www.rosetta-api.org/docs/low_level_ops.html)
+that the Rosetta API exposes.
 
 ## SDKs in More Languages
 We've spent a lot of time polishing and building on top of [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). At Coinbase, we write
