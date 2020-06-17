@@ -66,6 +66,12 @@ for an example of how to generate code from this specification.
 
 ## Validating Your Implementation
 To validate your implementation, check out the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
+The `rosetta-cli` has a command called `check` that can be used to ensure your implementation
+adheres to the specifications in this repository and that it accurately represents balance changes.
+
+You can view an extensive list of checks this tool performs [here](https://github.com/coinbase/rosetta-cli#correctness-checks).
+If you'd like to add more checks for correctness, feel free to [create an issue](https://github.com/coinbase/rosetta-cli/issues) listing
+in detail what you think should be checked in any implementation.
 
 ## Writing an Integration
 To write an integration with a Rosetta API implementation, we recommend using [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). There
