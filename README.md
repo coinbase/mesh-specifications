@@ -38,34 +38,35 @@ is [no restriction on what language you choose to use for your implementation](h
 and [no repository](https://www.rosetta-api.org/docs/no_gatekeepers.html#no-master-repository)
 where you must open a PR to share your work.
 
-When you've finished an implementation for a blockchain (make sure you
-[meet the expectations of any "complete" implementation](https://www.rosetta-api.org/docs/node_deployment.html)),
-share your work in the [ecosystem category of the community site](https://community.rosetta-api.org/c/ecosystem).
+When you've finished an implementation for a blockchain, share your work in the
+[ecosystem category of the community site](https://community.rosetta-api.org/c/ecosystem).
 Platforms looking for implementations for certain blockchains will be monitoring
 this section of the website for high-quality implementations they can use
-for integration.
+for integration (make sure your implementation meets the
+["expectations" of any implementation](https://www.rosetta-api.org/docs/node_deployment.html)).
 
 ### Using Golang
 If you are comfortable with Golang, the easiest way to write a Rosetta Node API implementation
-is to use the [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). This Golang project
-provides a [server](https://github.com/coinbase/rosetta-sdk-go/tree/master/server) package that
-allows a developer to write a Rosetta Node API server by implementing an interface. It automatically
-ensures client requests are valid and routes requests to the functions you've implemented in
-Go types (instead of in raw JSON).
+is to use [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). This Golang project
+provides a [server package](https://github.com/coinbase/rosetta-sdk-go/tree/master/server) that
+empowers a developer to write a full Rosetta Node API server by only implementing an interface.
+This package automatically validates client requests and calls the functions you implement
+with pre-parsed requests (instead of in raw JSON).
 
 There is a simple [example](https://github.com/coinbase/rosetta-sdk-go/tree/master/examples/server) of
 how to write an implementation using this package in [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go).
 
 ### Using Another Language
 If you plan to use a language other than Golang, you will need to either codegen
-a server (the [overview](#overview) mentions some tools that help with this) or
+a server (the [overview](#overview) mentions some tools that can help with this) or
 write one from scratch. If you do choose to write an implementation in another language,
-we ask that you create a seperate repository for all the code you generate so that other
-developers can use it. Check out [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go)
-for an example of how to generate code from this specification.
+we ask that you create a seperate repository in an SDK-like format for all the code you generate
+so that other developers can use it (see the note on [SDKs in more languages](#sdks-in-more-languages)). Check out
+[rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go) for an example of how to generate
+code from this specification.
 
 ## Validating Your Implementation
-To validate your implementation, check out the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
+To validate your implementation, you'll need to run the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
 The `rosetta-cli` has a command called `check` that can be used to ensure your implementation
 adheres to the specifications in this repository and that it accurately represents balance changes.
 
@@ -74,7 +75,8 @@ If you'd like to add more checks for correctness, feel free to [create an issue]
 in detail what you think should be checked in any implementation.
 
 ## Writing an Integration
-Before starting your own integration, we recommend reading this [blog post](https://www.rosetta-api.org/blog/2020/06/17/1-try-celo-rosetta.html) that
+Before starting your own integration, we recommend reading this
+[blog post](https://www.rosetta-api.org/blog/2020/06/17/1-try-celo-rosetta.html) that
 walks through how to fetch blocks from a Celo Rosetta API implementation.
 
 The most developed tools for working with Rosetta API implementations can
@@ -87,7 +89,7 @@ for all block processing.
 ### Syncer
 The core of any integration is syncing blocks reliably. The [syncer](https://github.com/coinbase/rosetta-sdk-go/tree/master/syncer)
 serially processes blocks from a Node API implementation (automatically handling re-orgs) with
-user-defined handling logic and storage. After a block is processed, store it to a DB or send a push
+user-defined handling logic and pluggable storage. After a block is processed, store it to a DB or send a push
 notification...it's up to you!
 
 ### Parser
@@ -106,7 +108,7 @@ so we put all of our effort into developing the [rosetta-sdk-go](https://github.
 We look forward to working with the community to develop just as powerful of an SDK in both
 Rust and JavaScript/TypeScript. If you'd like to work on SDKs in either of these languages,
 let us know on the [community forum](https://community.rosetta-api.org). We may feature
-a few of these completed SDKs on the [website](https://www.rosetta-api.org) or on this README.
+a few of completed SDKs on the [website](https://www.rosetta-api.org) or on this README.
 
 ## Specification Development
 * `make deps` to install dependencies
