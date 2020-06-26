@@ -252,17 +252,20 @@ paths:
     post:
       summary: Get an Account Balance
       description: |
-        Get an array of all Account Balances for an Account Identifier and the
-        Block Identifier at which the balance lookup was performed.
+        Get an array of all AccountBalances for an AccountIdentifier and the
+        BlockIdentifier at which the balance lookup was performed. The BlockIdentifier
+        must always be returned because some consumers of account balance data need
+        to know specifically at which block the balance was calculated to
+        compare balances they compute from operations with the balance returned
+        by the node.
 
-        Some consumers of account balance data need to know at which block the
-        balance was calculated to reconcile account balance changes.
-
-        To get all balances associated with an account, it may be necessary to
-        perform multiple balance requests with unique Account Identifiers.
-
-        If the client supports it, passing nil AccountIdentifier metadata to
-        the request should fetch all balances (if applicable).
+        It is important to note that making a balance request for an account
+        without populating the SubAccountIdentifier should not result in the
+        balance of all possible SubAccountIdentifiers being returned. Rather,
+        it should result in the balance pertaining to no SubAccountIdentifiers
+        being returned (sometimes called the liquid balance). To get all
+        balances associated with an account, it may be necessary to
+        perform multiple balance requests with unique AccountIdentifiers.
 
         It is also possible to perform a historical balance lookup (if the server
         supports it) by passing in an optional BlockIdentifier.
