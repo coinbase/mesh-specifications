@@ -452,6 +452,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /construction/parse:
+    post:
+      summary: Parse Transaction
+      description: |
+        ParseTransaction is called on both unsigned and signed transactions to
+        understand the intent of the formulated transaction. This is run as a
+        sanity check before signing (after ConstructTransaction) and before
+        broadcast (after CombineSignatures).
+      operationId: constructionParse
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionParseRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionParseResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /construction/submit:
     post:
       summary: Submit a Signed Transaction
@@ -894,7 +924,7 @@ components:
       type: object
       required:
         - network_identifier
-        - unsigned transaction
+        - unsigned_transaction
         - signatures
       properties:
         network_identifier:
@@ -916,6 +946,42 @@ components:
       properties:
         network_payload:
           type: string
+    ConstructionParseRequest:
+      description: |
+        ParseTransactionRequest is the input to ParseTransaction. It allows
+        the client to parse either an unsigned or signed transaction.
+      type: object
+      required:
+        - network_identifier
+        - signed
+        - transaction
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        signed:
+          type: bool
+        transaction:
+          type: string
+    ConstructionParseResponse:
+      description: |
+        ParseTransactionResponse returns an array of operations that occur in
+        a transaction blob. This should match the array of operations provided
+        to ConstructTransactionRequest.Operations.
+      type: object
+      required:
+        - operations
+        - signers
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Operation'
+        signers:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
     ConstructionSubmitRequest:
       description: |
         The transaction submission request includes a signed transaction.
