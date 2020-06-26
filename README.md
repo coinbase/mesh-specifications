@@ -22,16 +22,20 @@ Requests and responses can be crafted with auto-generated code using
 [OpenAPI Generator](https://openapi-generator.tech), are human-readable
 (easy to debug and understand), and can be used in servers and browsers.
 
-## Documentation
-Before diving into the specifications and starting your implementation, we recommend taking a look at the Rosetta API Docs:
+## Flow of Operations
+Before diving into the specification and documentation, we recommend reviewing
+the high-level diagrams below to gain some familiarity with the functionality
+of the Rosetta APIs.
 
-* [Overview](https://www.rosetta-api.org/docs/welcome.html)
-* [Data API](https://www.rosetta-api.org/docs/node_api_introduction.html)
-* [Construction API](https://www.rosetta-api.org/docs/wallet_api_introduction.html)
+The Rosetta APIs are organized into two distinct categories, the Data API and
+the Construction API. Simply put, the Data API is for retrieving data from
+a blockchain network and the Construction API is for constructing and
+submitting transactions to a blockchain network.
 
-If you have any questions, don't hesitate to reach out in our [community forum](https://community.rosetta-api.org).
+_The Data API was previously known as the Node API and the Construction API
+was previously known as the Wallet API. Their names were changed to better
+reflect their functionality._
 
-## Flows
 ### Data API
 ```
                                   Caller (i.e. Coinbase)                              + Data API Implementation
@@ -72,7 +76,13 @@ equals balance on node  |                                                       
 ```
 
 ### Construction API
-#### Offline
+If you have seen illustrations of the flow of transaction
+construction in other blockchain SDKs, the following diagrams
+may seem peculiar to you. Unlike traditional SDKs, Construction API
+implementations are fully stateless, can perform construction
+offline (when metadata like an account nonce is pre-fetched),
+and never have access to private key material.
+
 ```
                                Caller (i.e. Coinbase)                + Construction API Implementation
                               +-------------------------------------------------------------------------------------------+
@@ -118,7 +128,19 @@ Broadcast Signed Transaction X to monitor status                     |
                                                                      +
 ```
 
-#### Online
+#### Simplified Flow using a Higher-Level Interface
+Many developers may not have security constraints that dictate construction must
+occur offline or that they use their own detached signer (making the previously
+described flow much more cumbersome than other transaction construction and
+signing SDKs).
+
+Fortunately, it is possible (and encouraged) to build higher-level interfaces
+on top of these low-level endpoints to simplify development for integrators.
+For example, an interface developer may wish to automatically fetch metdata
+during their call to construct a transaction so users would not even
+know there are multiple interactions occuring. One could also provide
+a signing library with their higher-level interface so users do not need
+to use a detached signer. Here is an example of a simplified flow:
 ```
                                Caller (i.e. Mobile Wallet)           + Construction API Implementation
                               +-------------------------------------------------------------------------------------------+
@@ -129,18 +151,13 @@ Broadcast Signed Transaction X to monitor status                     |
                                                                      |                                  X   Fetch metadata needed for
                                                                      |                                  X   construction automatically
                              X                                       |                                  X
-                             X Construct Payloads to Sign +------------------> /construction/payloads   X   /construction/preprocess
-                             X (array of operations)                 |                   +              X             +
-                             X                                       |                   |              X             v
- Create unsigned transaction X          +------------------------------------------------+              X   /construction/metadata
-                             X          v                            |                                  X
-                             X Parse Unsigned Transaction +------------------> /construction/parse
-                             X to Confirm Correctness                |
-                             X                                       |
-                                                                     |
-                             X                                       |
+ Create unsigned transaction X Construct Payloads to Sign +------------------> /construction/payloads   X   /construction/preprocess
+                             X (array of operations)                 |                                  X             +
+                             X                                       |                                  X             v
+                                                                     |                                  X   /construction/metadata
+                             X                                       |                                  X
                              X Sign Payload(s) +-----------------------------> /construction/combine
-                             X (using caller's own detached signer)  |                 +
+                             X (using rosetta-sdk-go keys package)   |                 +
                              X                                       |                 |
    Create signed transaction X         +-----------------------------------------------+
                              X         v                             |
@@ -156,6 +173,22 @@ Broadcast Signed Transaction X to monitor status                     |
                              X                                       |
                                                                      +
 ```
+
+Why go through all this trouble to build a higher-level interface on this
+Construction API instead of just using existing SDKs, you may be wondering?
+Any interface built on top of the Construction API could support the construction
+of transactions on any blockchain that supports Rosetta with no modification.
+You could, for example, build a [WalletLink](https://www.walletlink.org/) service
+that worked with any blockchain.
+
+## Documentation
+Now that you have some familiarity with the flow of operations, we recommend taking a look at the Rosetta API Docs:
+
+* [Overview](https://www.rosetta-api.org/docs/welcome.html)
+* [Data API](https://www.rosetta-api.org/docs/node_api_introduction.html)
+* [Construction API](https://www.rosetta-api.org/docs/wallet_api_introduction.html)
+
+If you have any questions, don't hesitate to reach out in our [community forum](https://community.rosetta-api.org).
 
 ## Writing a Data API Implementation
 If you've made it this far, you are interested in developing a Rosetta Data API implementation
@@ -192,7 +225,32 @@ so that other developers can use it (see the note on [SDKs in more languages](#s
 code from this specification.
 
 ## Writing a Construction API Implementation
-TODO
+In the near future, we will update this section with tips and helpful links for writing a
+Construction API implementation.
+
+## Deployment
+Although the Construction API is defined in the same interface as endpoints that
+are "online" (i.e. fetching a block with `/block`), it must be possible to deploy your Data API
+and Construction API separately. This does not mean implementations need to live
+in separate repositories or even be defined in separate Dockerfiles. However, it must be possible
+to start an "offline-only" version of your implementation that supports all Construction API
+endpoints (other than `/construction/metadata` and `/construction/submit`).
+
+### Online Mode Endpoints
+* `/network/*`
+* `/block/*`
+* `/account/*`
+* `/mempool/*`
+* `/construction/metadata`
+* `/construction/submit`
+
+### Offline Mode Endpoints
+* `/construction/derive`
+* `/construction/preprocess`
+* `/construction/payloads`
+* `/construction/combine`
+* `/construction/parse`
+* `/construction/hash`
 
 ## Validating Your Implementation
 To validate your implementation, you'll need to run the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
