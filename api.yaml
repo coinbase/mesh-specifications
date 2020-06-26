@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.3.1
+  version: 1.4.0
   title: Rosetta
   description: |
     A Standard for Blockchain Interaction
@@ -288,6 +288,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /construction/derive_address:
+    post:
+      summary: Derive an Address
+      description: |
+        DeriveAddress returns the network-specific address associated with a public key.
+
+        Blockchains that require an on-chain action to create an
+        account should not implement this method.
+      operationId: constructionDeriveAddress
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionDeriveAddressRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionDeriveAddressResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /construction/metadata:
     post:
       summary: Get Transaction Construction Metadata
@@ -404,6 +434,8 @@ components:
       $ref: 'models/OperationStatus.yaml'
     Timestamp:
       $ref: 'models/Timestamp.yaml'
+    PublicKey:
+      $ref: 'models/PublicKey.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -662,6 +694,36 @@ components:
           example:
             account_sequence: 23
             recent_block_hash: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5"
+    ConstructionDeriveAddressRequest:
+      description: |
+        ConstructionDeriveAddressRequest is the input to the Address method.
+        Network is provided in the request because some blockchains
+        have different address formats for different networks.
+        Metadata is provided in the request because some blockchains
+        allow for multiple address types (i.e. different address
+        for validators vs normal accounts).
+      type: object
+      required:
+        - network_identifier
+        - public_key
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        public_key:
+          $ref: '#/components/schemas/PublicKey'
+        metadata:
+          type: object
+    ConstructionDeriveAddressResponse:
+      description: |
+        ConstructionDeriveAddressResponse is the output of the Address method.
+      type: object
+      required:
+        - address
+      properties:
+        address:
+          type: string
+        metadata:
+          type: object
     ConstructionSubmitRequest:
       description: |
         The transaction submission request includes a signed transaction.
