@@ -199,7 +199,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MempoolRequest'
+              $ref: '#/components/schemas/NetworkRequest'
       responses:
         '200':
           description: Expected response to a valid request
@@ -252,17 +252,20 @@ paths:
     post:
       summary: Get an Account Balance
       description: |
-        Get an array of all Account Balances for an Account Identifier and the
-        Block Identifier at which the balance lookup was performed.
+        Get an array of all AccountBalances for an AccountIdentifier and the
+        BlockIdentifier at which the balance lookup was performed. The BlockIdentifier
+        must always be returned because some consumers of account balance data need
+        to know specifically at which block the balance was calculated to
+        compare balances they compute from operations with the balance returned
+        by the node.
 
-        Some consumers of account balance data need to know at which block the
-        balance was calculated to reconcile account balance changes.
-
-        To get all balances associated with an account, it may be necessary to
-        perform multiple balance requests with unique Account Identifiers.
-
-        If the client supports it, passing nil AccountIdentifier metadata to
-        the request should fetch all balances (if applicable).
+        It is important to note that making a balance request for an account
+        without populating the SubAccountIdentifier should not result in the
+        balance of all possible SubAccountIdentifiers being returned. Rather,
+        it should result in the balance pertaining to no SubAccountIdentifiers
+        being returned (sometimes called the liquid balance). To get all
+        balances associated with an account, it may be necessary to
+        perform multiple balance requests with unique AccountIdentifiers.
 
         It is also possible to perform a historical balance lookup (if the server
         supports it) by passing in an optional BlockIdentifier.
@@ -703,16 +706,6 @@ components:
       properties:
         transaction:
           $ref: '#/components/schemas/Transaction'
-    MempoolRequest:
-      description: |
-        A MempoolRequest is utilized to retrieve all transaction identifiers in
-        the mempool for a particular network_identifier.
-      type: object
-      required:
-        - network_identifier
-      properties:
-        network_identifier:
-          $ref: '#/components/schemas/NetworkIdentifier'
     MempoolResponse:
       description: |
         A MempoolResponse contains all transaction identifiers in the mempool
@@ -790,6 +783,12 @@ components:
       description: |
         NetworkStatusResponse contains basic information about the node's
         view of a blockchain network.
+
+        If a Rosetta implementation prunes historical state, it should
+        populate the optional `oldest_block_identifier` field with the
+        oldest block available to query. If this is not populated,
+        it is assumed that the `genesis_block_identifier` is the oldest
+        queryable block.
       type: object
       required:
         - current_block_identifier
@@ -802,6 +801,8 @@ components:
         current_block_timestamp:
           $ref: '#/components/schemas/Timestamp'
         genesis_block_identifier:
+          $ref: '#/components/schemas/BlockIdentifier'
+        oldest_block_identifier:
           $ref: '#/components/schemas/BlockIdentifier'
         peers:
           type: array
@@ -1001,7 +1002,7 @@ components:
         network_identifier:
           $ref: '#/components/schemas/NetworkIdentifier'
         signed:
-          type: bool
+          type: boolean
           description: |
             Signed is a boolean indicating whether the transaction is signed.
         transaction:

@@ -36,6 +36,14 @@ jobs:
       - checkout
       - run: make node-deps
       - run: make check-gen
+  check-valid:
+    docker:
+      - image: circleci/node:12
+        user: root
+    steps:
+      - checkout
+      - run: make node-deps
+      - run: make check-valid
   salus:
     machine: true
     steps:
@@ -49,4 +57,5 @@ workflows:
       - check-license
       - check-spelling
       - check-gen
+      - check-valid
       - salus

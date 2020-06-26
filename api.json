@@ -233,7 +233,7 @@
          "content": {
            "application/json": {
              "schema": {
-               "$ref":"#/components/schemas/MempoolRequest"
+               "$ref":"#/components/schemas/NetworkRequest"
               }
             }
           }
@@ -307,7 +307,7 @@
    "/account/balance": {
      "post": {
        "summary":"Get an Account Balance",
-       "description":"Get an array of all Account Balances for an Account Identifier and the Block Identifier at which the balance lookup was performed. Some consumers of account balance data need to know at which block the balance was calculated to reconcile account balance changes. To get all balances associated with an account, it may be necessary to perform multiple balance requests with unique Account Identifiers. If the client supports it, passing nil AccountIdentifier metadata to the request should fetch all balances (if applicable). It is also possible to perform a historical balance lookup (if the server supports it) by passing in an optional BlockIdentifier.",
+       "description":"Get an array of all AccountBalances for an AccountIdentifier and the BlockIdentifier at which the balance lookup was performed. The BlockIdentifier must always be returned because some consumers of account balance data need to know specifically at which block the balance was calculated to compare balances they compute from operations with the balance returned by the node. It is important to note that making a balance request for an account without populating the SubAccountIdentifier should not result in the balance of all possible SubAccountIdentifiers being returned. Rather, it should result in the balance pertaining to no SubAccountIdentifiers being returned (sometimes called the liquid balance). To get all balances associated with an account, it may be necessary to perform multiple balance requests with unique AccountIdentifiers. It is also possible to perform a historical balance lookup (if the server supports it) by passing in an optional BlockIdentifier.",
        "operationId":"accountBalance",
        "tags": [
          "Account"
@@ -783,7 +783,7 @@
         ],
        "properties": {
          "index": {
-           "description":"The operation index is used to ensure each operation has a unique identifier within a transaction. To clarify, there may not be any notion of an operation index in the blockchain being described.",
+           "description":"The operation index is used to ensure each operation has a unique identifier within a transaction. This index is only relative to the transaction and NOT GLOBAL. The operations in each transaction should start from index 0. To clarify, there may not be any notion of an operation index in the blockchain being described.",
            "type":"integer",
            "format":"int64",
            "minimum": 0,
@@ -889,7 +889,7 @@
             }
           },
          "metadata": {
-           "description":"Transactions that are related to other transactions (like a cross-shard transactioin) should include the tranaction_identifier of these transactions in the metadata.",
+           "description":"Transactions that are related to other transactions (like a cross-shard transaction) should include the tranaction_identifier of these transactions in the metadata.",
            "type":"object",
            "example": {
              "size": 12378,
@@ -926,7 +926,7 @@
             ]
           },
          "type": {
-           "description":"The network-specific type of the operation. Ensure that any type that can be returned here is also specified in the NetowrkStatus. This can be very useful to downstream consumers that parse all block data.",
+           "description":"The network-specific type of the operation. Ensure that any type that can be returned here is also specified in the NetworkStatus. This can be very useful to downstream consumers that parse all block data.",
            "type":"string",
            "example":"Transfer"
           },
@@ -1051,7 +1051,8 @@
        "required": [
          "operation_statuses",
          "operation_types",
-         "errors"
+         "errors",
+         "historical_balance_lookup"
         ],
        "properties": {
          "operation_statuses": {
@@ -1075,6 +1076,10 @@
            "items": {
              "$ref":"#/components/schemas/Error"
             }
+          },
+         "historical_balance_lookup": {
+           "type":"boolean",
+           "description":"Any Rosetta implementation that supports querying the balance of an account at any height in the past should set this to true."
           }
         }
       },
@@ -1125,7 +1130,7 @@
         }
       },
      "CurveType": {
-       "description":"CurveType is the type of cryptographic curve associated with a PublicKey.  * secp256k1 = SEC compressed 33-bytes. * edwards25519 =  y (255-bits) || x-sign-bit (32-bytes).",
+       "description":"CurveType is the type of cryptographic curve associated with a PublicKey.  * secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3) * edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf)",
        "type":"string",
        "enum": [
          "secp256k1",
@@ -1177,7 +1182,7 @@
         }
       },
      "SignatureType": {
-       "description":"SignatureType is the type of a cryptographic signature. * ecdsa = r (32-bytes) || s (32-bytes) * ecdsa_recovery = r (32-bytes) || s (32-bytes) || v (1-byte) * ed25519 = R (32-byte) || s (32-bytes)",
+       "description":"SignatureType is the type of a cryptographic signature. * ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes` * ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes` * ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`",
        "type":"string",
        "enum": [
          "ecdsa",
@@ -1298,18 +1303,6 @@
           }
         }
       },
-     "MempoolRequest": {
-       "description":"A MempoolRequest is utilized to retrieve all transaction identifiers in the mempool for a particular network_identifier.",
-       "type":"object",
-       "required": [
-         "network_identifier"
-        ],
-       "properties": {
-         "network_identifier": {
-           "$ref":"#/components/schemas/NetworkIdentifier"
-          }
-        }
-      },
      "MempoolResponse": {
        "description":"A MempoolResponse contains all transaction identifiers in the mempool for a particular network_identifier.",
        "type":"object",
@@ -1400,7 +1393,7 @@
         }
       },
      "NetworkStatusResponse": {
-       "description":"NetworkStatusResponse contains basic information about the node's view of a blockchain network.",
+       "description":"NetworkStatusResponse contains basic information about the node's view of a blockchain network. If a Rosetta implementation prunes historical state, it should populate the optional `oldest_block_identifier` field with the oldest block available to query. If this is not populated, it is assumed that the `genesis_block_identifier` is the oldest queryable block.",
        "type":"object",
        "required": [
          "current_block_identifier",
@@ -1416,6 +1409,9 @@
            "$ref":"#/components/schemas/Timestamp"
           },
          "genesis_block_identifier": {
+           "$ref":"#/components/schemas/BlockIdentifier"
+          },
+         "oldest_block_identifier": {
            "$ref":"#/components/schemas/BlockIdentifier"
           },
          "peers": {
@@ -1631,7 +1627,7 @@
            "$ref":"#/components/schemas/NetworkIdentifier"
           },
          "signed": {
-           "type":"bool",
+           "type":"boolean",
            "description":"Signed is a boolean indicating whether the transaction is signed."
           },
          "transaction": {
@@ -1738,15 +1734,25 @@
            "description":"Code is a network-specific error code. If desired, this code can be equivalent to an HTTP status code.",
            "type":"integer",
            "format":"int32",
-           "minimum": 0
+           "minimum": 0,
+           "example": 12
           },
          "message": {
            "description":"Message is a network-specific error message.",
-           "type":"string"
+           "type":"string",
+           "example":"Invalid account format"
           },
          "retriable": {
            "description":"An error is retriable if the same request may succeed if submitted again.",
            "type":"boolean"
+          },
+         "details": {
+           "type":"object",
+           "description":"Often times it is useful to return context specific to the request that caused the error (i.e. a sample of the stack trace or impacted account) in addition to the standard error message.",
+           "example": {
+             "address":"0x1dcc4de8dec75d7aab85b567b6",
+             "error":"not base64"
+            }
           }
         }
       }
