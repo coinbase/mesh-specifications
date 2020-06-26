@@ -26,13 +26,139 @@ Requests and responses can be crafted with auto-generated code using
 Before diving into the specifications and starting your implementation, we recommend taking a look at the Rosetta API Docs:
 
 * [Overview](https://www.rosetta-api.org/docs/welcome.html)
-* [Node API](https://www.rosetta-api.org/docs/node_api_introduction.html)
-* [Wallet API (coming soon!)](https://www.rosetta-api.org/docs/wallet_api_introduction.html)
+* [Data API](https://www.rosetta-api.org/docs/node_api_introduction.html)
+* [Construction API](https://www.rosetta-api.org/docs/wallet_api_introduction.html)
 
 If you have any questions, don't hesitate to reach out in our [community forum](https://community.rosetta-api.org).
 
-## Writing a Node API Implementation
-If you've made it this far, you are interested in developing a Rosetta Node API implementation
+## Flows
+### Data API
+```
+                                  Caller (i.e. Coinbase)                              + Data API Implementation
+                                 +------------------------------------------------------------------------------------+
+                               X                                                      |
+                               X      Get Supported Networks +---------------------------------> /network/list
+                               X                                                      |                +
+                               X  +-----------+--------------------------------------------------------+
+      Get supported networks,  X  |           v                                       |
+      their supported options, X  |   Get Network Options +------------------------------------> /network/options
+      and their status         X  |                                                   |
+                               X  +-----------+                                       |
+                               X              v                                       |
+                               X      Get Network Status +-------------------------------------> /network/status
+                               X                                                      |
+                                                                                      |
+                                   X                                                  |
+                                   X  Get Block +----------------------------------------------> /block
+                                   X                                                  |             +
+                        +---------+X                +-----------------------------------------------+
+                        |          X                v                                 |
+Ensure balance computed |          X  [Optional] Get Additional Block Transactions +-----------> /block/transaction
+from block operations   |          X                                                  |
+equals balance on node  |                                                             |
+                        |                                                             |
+                        +-----------> Get account balance for each +---------------------------> /account/balance
+                                      account seen in a block                         |
+                                                                                      |
+                                                                                      |
+                                   X                                                  |
+                                   X  Get Mempool Transactions +-------------------------------> /mempool
+      Monitor the mempool for      X                                                  |              +
+      broadcast transaction status X                 +-----------------------------------------------+
+      and incoming deposits        X                 v                                |
+                                   X  Get a Specific Mempool Transaction +---------------------> /mempool/transaction
+                                   X                                                  |
+                                                                                      +
+```
+
+### Construction API
+#### Offline
+```
+                               Caller (i.e. Coinbase)                + Construction API Implementation
+                              +-------------------------------------------------------------------------------------------+
+                                                                     |
+                               Derive Address   +----------------------------> /construction/derive
+                               from Public Key                       |
+                                                                     |
+                             X                                       |
+                             X Create Metadata Request +---------------------> /construction/preprocess
+                             X (array of operations)                 |                    +
+    Get metadata needed      X                                       |                    |
+    to construct transaction X            +-----------------------------------------------+
+                             X            v                          |
+                             X Fetch Online Metadata +-----------------------> /construction/metadata (online)
+                             X                                       |
+                                                                     |
+                             X                                       |
+                             X Construct Payloads to Sign +------------------> /construction/payloads
+                             X (array of operations)                 |                   +
+                             X                                       |                   |
+ Create unsigned transaction X          +------------------------------------------------+
+                             X          v                            |
+                             X Parse Unsigned Transaction +------------------> /construction/parse
+                             X to Confirm Correctness                |
+                             X                                       |
+                                                                     |
+                             X                                       |
+                             X Sign Payload(s) +-----------------------------> /construction/combine
+                             X (using caller's own detached signer)  |                 +
+                             X                                       |                 |
+   Create signed transaction X         +-----------------------------------------------+
+                             X         v                             |
+                             X Parse Signed Transaction +--------------------> /construction/parse
+                             X to Confirm Correctness                |
+                             X                                       |
+                                                                     |
+                             X                                       |
+                             X Get hash of signed transaction +--------------> /construction/hash
+Broadcast Signed Transaction X to monitor status                     |
+                             X                                       |
+                             X Submit Transaction +--------------------------> /construction/submit
+                             X                                       |
+                                                                     +
+```
+
+#### Online
+```
+                               Caller (i.e. Mobile Wallet)           + Construction API Implementation
+                              +-------------------------------------------------------------------------------------------+
+                                                                     |
+                               Derive Address   +----------------------------> /construction/derive
+                               from Public Key                       |
+                                                                     |                                  X
+                                                                     |                                  X   Fetch metadata needed for
+                                                                     |                                  X   construction automatically
+                             X                                       |                                  X
+                             X Construct Payloads to Sign +------------------> /construction/payloads   X   /construction/preprocess
+                             X (array of operations)                 |                   +              X             +
+                             X                                       |                   |              X             v
+ Create unsigned transaction X          +------------------------------------------------+              X   /construction/metadata
+                             X          v                            |                                  X
+                             X Parse Unsigned Transaction +------------------> /construction/parse
+                             X to Confirm Correctness                |
+                             X                                       |
+                                                                     |
+                             X                                       |
+                             X Sign Payload(s) +-----------------------------> /construction/combine
+                             X (using caller's own detached signer)  |                 +
+                             X                                       |                 |
+   Create signed transaction X         +-----------------------------------------------+
+                             X         v                             |
+                             X Parse Signed Transaction +--------------------> /construction/parse
+                             X to Confirm Correctness                |
+                             X                                       |
+                                                                     |
+                             X                                       |
+                             X Get hash of signed transaction +--------------> /construction/hash
+Broadcast Signed Transaction X to monitor status                     |
+                             X                                       |
+                             X Submit Transaction +--------------------------> /construction/submit
+                             X                                       |
+                                                                     +
+```
+
+## Writing a Data API Implementation
+If you've made it this far, you are interested in developing a Rosetta Data API implementation
 for a blockchain project you are working on. As mentioned in the Rosetta doumentation, there
 is [no restriction on what language you choose to use for your implementation](https://www.rosetta-api.org/docs/no_gatekeepers.html#no-required-languages)
 and [no repository](https://www.rosetta-api.org/docs/no_gatekeepers.html#no-master-repository)
@@ -46,10 +172,10 @@ for integration (make sure your implementation meets the
 ["expectations" of any implementation](https://www.rosetta-api.org/docs/node_deployment.html)).
 
 ### Using Golang
-If you are comfortable with Golang, the easiest way to write a Rosetta Node API implementation
+If you are comfortable with Golang, the easiest way to write a Rosetta Data API implementation
 is to use [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). This Golang project
 provides a [server package](https://github.com/coinbase/rosetta-sdk-go/tree/master/server) that
-empowers a developer to write a full Rosetta Node API server by only implementing an interface.
+empowers a developer to write a full Rosetta Data API server by only implementing an interface.
 This package automatically validates client requests and calls the functions you implement
 with pre-parsed requests (instead of in raw JSON).
 
@@ -64,6 +190,9 @@ we ask that you create a separate repository in an SDK-like format for all the c
 so that other developers can use it (see the note on [SDKs in more languages](#sdks-in-more-languages)). Check out
 [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go) for an example of how to generate
 code from this specification.
+
+## Writing a Construction API Implementation
+TODO
 
 ## Validating Your Implementation
 To validate your implementation, you'll need to run the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
@@ -88,7 +217,7 @@ for all block processing.
 
 ### Syncer
 The core of any integration is syncing blocks reliably. The [syncer](https://github.com/coinbase/rosetta-sdk-go/tree/master/syncer)
-serially processes blocks from a Node API implementation (automatically handling re-orgs) with
+serially processes blocks from a Data API implementation (automatically handling re-orgs) with
 user-defined handling logic and pluggable storage. After a block is processed, store it to a DB or send a push
 notification...it's up to you!
 
