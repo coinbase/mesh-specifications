@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright 2020 Coinbase, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-OS="$(uname)"
-case "${OS}" in
-    'Linux')
-        OS='linux'
-        SED_IFLAG=(-i'')
-        ;;
-    'Darwin')
-        OS='macos'
-        SED_IFLAG=(-i '')
-        ;;
-    *)
-        echo "Operating system '${OS}' not supported."
-        exit 1
-        ;;
-esac
+description: |
+  SignatureType is the type of a cryptographic signature.
 
-OUTPUT_FILE=api.json
-
-# Bundle yaml
-swagger-cli bundle api.yaml -o "${OUTPUT_FILE}";
-
-# Remove newlines from descriptions
-sed "${SED_IFLAG[@]}" 's/\\n\\n/\\n/g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/\\n/ /g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/ "/"/g' "${OUTPUT_FILE}";
+  * ecdsa = r (32-bytes) || s (32-bytes)
+  * ecdsa_recovery = r (32-bytes) || s (32-bytes) || v (1-byte)
+  * ed25519 = R (32-byte) || s (32-bytes)
+type: string
+enum:
+  - ecdsa
+  - ecdsa_recovery
+  - ed25519

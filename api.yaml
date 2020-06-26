@@ -14,10 +14,10 @@
 
 openapi: 3.0.2
 info:
-  version: 1.3.1
+  version: 1.4.0
   title: Rosetta
   description: |
-    A Standard for Blockchain Interaction
+    Build Once. Integrate Your Blockchain Everywhere.
   license:
     name: Apache 2.0
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -27,7 +27,7 @@ paths:
       summary: Get List of Available Networks
       description: |
         This endpoint returns a list of NetworkIdentifiers that the Rosetta
-        server can handle.
+        server supports.
       operationId: networkList 
       tags:
         - Network
@@ -288,25 +288,83 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /construction/derive:
+    post:
+      summary: Derive an Address from a PublicKey
+      description: |
+        Derive returns the network-specific address associated with a public key.
+
+        Blockchains that require an on-chain action to create an
+        account should not implement this method.
+      operationId: constructionDerive
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionDeriveRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionDeriveResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /construction/preprocess:
+    post:
+      summary: Create a Request to Fetch Metadata
+      description: |
+        Preprocess is called prior to `/construction/payloads` to construct a
+        request for any metadata that is needed for transaction construction
+        given (i.e. account nonce).
+
+        The request returned from this method will be used by the caller (in a
+        different execution environment) to call the `/construction/metadata`
+        endpoint.
+      operationId: constructionPreprocess
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionPreprocessRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionPreprocessResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /construction/metadata:
     post:
-      summary: Get Transaction Construction Metadata
+      summary: Get Metadata for Transaction Construction
       description: |
         Get any information required to construct a transaction for a specific
         network. Metadata returned here could be a recent hash to use, an
-        account sequence number, or even arbitrary chain state. It is up to the
-        client to correctly populate the options object with any
-        network-specific details to ensure the correct metadata is retrieved.
+        account sequence number, or even arbitrary chain state. The request
+        used when calling this endpoint is often created by calling
+        `/construction/preprocess` in an offline environment.
 
         It is important to clarify that this endpoint should not pre-construct
-        any transactions for the client (this should happen in the SDK). This
-        endpoint is left purposely unstructured because of the wide scope
+        any transactions for the client (this should happen in `/construction/payloads`).
+        This endpoint is left purposely unstructured because of the wide scope
         of metadata that could be required.
-
-        In a future version of the spec, we plan to pass an array of Rosetta
-        Operations to specify which metadata should be received and to create
-        a transaction in an accompanying SDK. This will help to insulate the
-        client from chain-specific details that are currently required here.
       operationId: constructionMetadata 
       tags:
         - Construction
@@ -323,6 +381,133 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstructionMetadataResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /construction/payloads:
+    post:
+      summary: Generate an Unsigned Transaction and Signing Payloads
+      description: |
+        Payloads is called with an array of operations
+        and the response from `/construction/metadata`. It returns an
+        unsigned transaction blob and a collection of payloads that must
+        be signed by particular addresses using a certain SignatureType.
+
+        The array of operations provided in transaction construction often times
+        can not specify all "effects" of a transaction (consider invoked transactions
+        in Ethereum). However, they can deterministically specify the "intent"
+        of the transaction, which is sufficient for construction. For this reason,
+        parsing the corresponding transaction in the Data API (when it lands on chain)
+        will contain a superset of whatever operations were provided during construction.
+      operationId: constructionPayloads
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionPayloadsRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionPayloadsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /construction/combine:
+    post:
+      summary: Create Network Transaction from Signatures
+      description: |
+        Combine creates a network-specific transaction from an unsigned
+        transaction and an array of provided signatures.
+
+        The signed transaction returned from this method will be sent to the
+        `/construction/submit` endpoint by the caller.
+      operationId: constructionCombine
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionCombineRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionCombineResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /construction/parse:
+    post:
+      summary: Parse a Transaction
+      description: |
+        Parse is called on both unsigned and signed transactions to
+        understand the intent of the formulated transaction.
+
+        This is run as a sanity check before signing (after `/construction/payloads`)
+        and before broadcast (after `/construction/combine`). 
+      operationId: constructionParse
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionParseRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionParseResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /construction/hash:
+    post:
+      summary: Get the Hash of a Signed Transaction
+      description: |
+        TransactionHash returns the network-specific transaction hash for
+        a signed transaction.
+      operationId: constructionHash
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionHashRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionHashResponse'
         default:
           description: unexpected error
           content:
@@ -404,6 +589,16 @@ components:
       $ref: 'models/OperationStatus.yaml'
     Timestamp:
       $ref: 'models/Timestamp.yaml'
+    PublicKey:
+      $ref: 'models/PublicKey.yaml'
+    CurveType:
+      $ref: 'models/CurveType.yaml'
+    SigningPayload:
+      $ref: 'models/SigningPayload.yaml'
+    Signature:
+      $ref: 'models/Signature.yaml'
+    SignatureType:
+      $ref: 'models/SignatureType.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -650,9 +845,7 @@ components:
     ConstructionMetadataResponse:
       description: |
         The ConstructionMetadataResponse returns network-specific metadata
-        used for transaction construction. It is likely that the client will
-        not inspect this metadata before passing it to a client SDK that uses
-        it for construction.
+        used for transaction construction.
       type: object
       required:
         - metadata
@@ -662,6 +855,205 @@ components:
           example:
             account_sequence: 23
             recent_block_hash: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5"
+    ConstructionDeriveRequest:
+      description: |
+        ConstructionDeriveRequest is passed to the `/construction/derive`
+        endpoint. Network is provided in the request because some blockchains
+        have different address formats for different networks.
+        Metadata is provided in the request because some blockchains
+        allow for multiple address types (i.e. different address
+        for validators vs normal accounts).
+      type: object
+      required:
+        - network_identifier
+        - public_key
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        public_key:
+          $ref: '#/components/schemas/PublicKey'
+        metadata:
+          type: object
+    ConstructionDeriveResponse:
+      description: |
+        ConstructionDeriveResponse is returned by the `/construction/derive`
+        endpoint.
+      type: object
+      required:
+        - address
+      properties:
+        address:
+          type: string
+          description: |
+            Address in network-specific format.
+        metadata:
+          type: object
+    ConstructionPreprocessRequest:
+      description: |
+        ConstructionPreprocessRequest is passed to the `/construction/preprocess`
+        endpoint so that a Rosetta implementation can determine which
+        metadata it needs to request for construction.
+      type: object
+      required:
+        - network_identifier
+        - operations
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Operation'
+        metadata:
+          type: object
+    ConstructionPreprocessResponse:
+      description: |
+        ConstructionPreprocessResponse contains the request that will
+        be sent directly to `/construction/metadata`.
+
+        If it is not necessary to make a request to `/construction/metadata`,
+        options should be null.
+      type: object
+      properties:
+        options:
+          type: object
+          description: |
+            The options that will be sent directly to `/construction/metadata` by
+            the caller.
+    ConstructionPayloadsRequest:
+      description: |
+        ConstructionPayloadsRequest is the request to
+        `/construction/payloads`. It contains the network,
+        a slice of operations, and arbitrary metadata
+        that was returned by the call to `/construction/metadata`.
+      type: object
+      required:
+        - network_identifier
+        - operations
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Operation'
+        metadata:
+          type: object
+    ConstructionPayloadsResponse:
+      description: |
+        ConstructionTransactionResponse is returned by `/construction/payloads`. It
+        contains an unsigned transaction blob (that is usually needed to construct
+        the a network transaction from a collection of signatures) and an
+        array of payloads that must be signed by the caller.
+      type: object
+      required:
+        - unsigned_transaction
+        - payloads
+      properties:
+        unsigned_transaction:
+          type: string
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/SigningPayload'
+    ConstructionCombineRequest:
+      description: |
+        ConstructionCombineRequest is the input to the `/construction/combine`
+        endpoint. It contains the unsigned transaction blob returned by
+        `/construction/payloads` and all required signatures to create
+        a network transaction.
+      type: object
+      required:
+        - network_identifier
+        - unsigned_transaction
+        - signatures
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        unsigned_transaction:
+          type: string
+        signatures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Signature'
+    ConstructionCombineResponse:
+      description: |
+        ConstructionCombineResponse is returned by `/construction/combine`.
+        The network payload will be sent directly to the
+        `construction/submit` endpoint.
+      type: object
+      required:
+        - signed_transaction 
+      properties:
+        signed_transaction:
+          type: string
+    ConstructionParseRequest:
+      description: |
+        ConstructionParseRequest is the input to the `/construction/parse`
+        endpoint. It allows the caller to parse either an unsigned or
+        signed transaction.
+      type: object
+      required:
+        - network_identifier
+        - signed
+        - transaction
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        signed:
+          type: bool
+          description: |
+            Signed is a boolean indicating whether the transaction is signed.
+        transaction:
+          type: string
+          description: |
+            This must be either the unsigned transaction blob returned by
+            `/construction/payloads` or the signed transaction blob
+            returned by `/construction/combine`.
+    ConstructionParseResponse:
+      description: |
+        ConstructionParseResponse contains an array of operations that occur in
+        a transaction blob. This should match the array of operations provided
+        to `/construction/preprocess` and `/construction/payloads`.
+      type: object
+      required:
+        - operations
+        - signers
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Operation'
+        signers:
+          description: |
+            All signers of a particular transaction. If the transaction
+            is unsigned, it should be empty.
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+    ConstructionHashRequest:
+      description: |
+        ConstructionHashRequest is the input to the `/construction/hash` endpoint.
+      type: object
+      required:
+        - network_identifier
+        - signed_transaction
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        signed_transaction:
+          type: string
+    ConstructionHashResponse:
+      description: |
+        ConstructionHashResponse is the output of the `/construction/hash` endpoint.
+      type: object
+      required:
+        - transaction_hash
+      properties:
+        transaction_hash:
+          type: string
     ConstructionSubmitRequest:
       description: |
         The transaction submission request includes a signed transaction.

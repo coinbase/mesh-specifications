@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright 2020 Coinbase, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-OS="$(uname)"
-case "${OS}" in
-    'Linux')
-        OS='linux'
-        SED_IFLAG=(-i'')
-        ;;
-    'Darwin')
-        OS='macos'
-        SED_IFLAG=(-i '')
-        ;;
-    *)
-        echo "Operating system '${OS}' not supported."
-        exit 1
-        ;;
-esac
+description: |
+  CurveType is the type of cryptographic curve associated with a PublicKey. 
 
-OUTPUT_FILE=api.json
-
-# Bundle yaml
-swagger-cli bundle api.yaml -o "${OUTPUT_FILE}";
-
-# Remove newlines from descriptions
-sed "${SED_IFLAG[@]}" 's/\\n\\n/\\n/g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/\\n/ /g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/ "/"/g' "${OUTPUT_FILE}";
+  * secp256k1 = SEC compressed 33-bytes.
+  * edwards25519 =  y (255-bits) || x-sign-bit (32-bytes).
+type: string 
+enum:
+  - secp256k1
+  - edwards25519

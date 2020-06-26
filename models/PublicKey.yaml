@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright 2020 Coinbase, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-OS="$(uname)"
-case "${OS}" in
-    'Linux')
-        OS='linux'
-        SED_IFLAG=(-i'')
-        ;;
-    'Darwin')
-        OS='macos'
-        SED_IFLAG=(-i '')
-        ;;
-    *)
-        echo "Operating system '${OS}' not supported."
-        exit 1
-        ;;
-esac
+description: |
+  PublicKey contains a public key byte array
+  for a particular CurveType encoded in hex.
 
-OUTPUT_FILE=api.json
-
-# Bundle yaml
-swagger-cli bundle api.yaml -o "${OUTPUT_FILE}";
-
-# Remove newlines from descriptions
-sed "${SED_IFLAG[@]}" 's/\\n\\n/\\n/g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/\\n/ /g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/ "/"/g' "${OUTPUT_FILE}";
+  Note that there is no PrivateKey struct as this
+  is NEVER the concern of an implementation.
+type: object 
+required:
+  - hex_bytes
+  - curve_type
+properties:
+  hex_bytes:
+    type: string
+    description: |
+      Hex-encoded public key bytes in the format
+      specified by the CurveType.
+  curve_type:
+    $ref: "CurveType.yaml"

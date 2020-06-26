@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright 2020 Coinbase, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-OS="$(uname)"
-case "${OS}" in
-    'Linux')
-        OS='linux'
-        SED_IFLAG=(-i'')
-        ;;
-    'Darwin')
-        OS='macos'
-        SED_IFLAG=(-i '')
-        ;;
-    *)
-        echo "Operating system '${OS}' not supported."
-        exit 1
-        ;;
-esac
+description: |
+  SigningPayload is signed by the client with the keypair associated
+  with an address using the specified SignatureType.
 
-OUTPUT_FILE=api.json
-
-# Bundle yaml
-swagger-cli bundle api.yaml -o "${OUTPUT_FILE}";
-
-# Remove newlines from descriptions
-sed "${SED_IFLAG[@]}" 's/\\n\\n/\\n/g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/\\n/ /g' "${OUTPUT_FILE}"; 
-sed "${SED_IFLAG[@]}" 's/ "/"/g' "${OUTPUT_FILE}";
+  SignatureType can be optionally populated if there is
+  a restriction on the signature scheme that can be
+  used to sign the payload.
+type: object
+required:
+  - address
+  - hex_bytes
+properties:
+  address:
+    type: string
+    description: |
+      The network-specific address of the account that should sign
+      the payload.
+  hex_bytes:
+    type: string
+  signature_type:
+    $ref: "SignatureType.yaml"
