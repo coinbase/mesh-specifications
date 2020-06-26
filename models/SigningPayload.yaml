@@ -16,10 +16,9 @@ description: |
   SigningPayload is signed by the client with the keypair associated
   with an address using the specified SignatureType.
 
-  [TODO] explain that signature_type is provided optionally
-  if there is a restriction. Otherwise, leave blank for default
-  or if multiple accepted (does not mean any signature type can
-  be used).
+  SignatureType can be optionally populated if there is
+  a restriction on the signature scheme that can be
+  used to sign the payload.
 type: object
 required:
   - address
@@ -27,6 +26,9 @@ required:
 properties:
   address:
     type: string
+    description: |
+      The network-specific address of the account that should sign
+      the payload.
   hex_bytes:
     type: string
   signature_type:

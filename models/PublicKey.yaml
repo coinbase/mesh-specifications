@@ -26,6 +26,7 @@ properties:
   hex_bytes:
     type: string
     description: |
-      hex-encoded public key
+      Hex-encoded public key bytes in the format
+      specified by the CurveType.
   curve_type:
     $ref: "CurveType.yaml"
