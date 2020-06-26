@@ -290,7 +290,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /construction/derive:
     post:
-      summary: Derive an Address from a public key
+      summary: Derive an Address from a PublicKey
       description: |
         Derive returns the network-specific address associated with a public key.
 
@@ -320,14 +320,15 @@ paths:
                 $ref: '#/components/schemas/Error'
   /construction/preprocess:
     post:
-      summary: Prepare a Request to Fetch Metadata
+      summary: Create a Request to Fetch Metadata
       description: |
-        Preprocess is called prior to ConstructTransaction to allow
-        a Rosetta API implementation to construct a request for any metadata
-        that is needed for transaction construction given (i.e. account nonce).
+        Preprocess is called prior to `/construction/payloads` to construct a
+        request for any metadata that is needed for transaction construction
+        given (i.e. account nonce).
 
-        The request returned from this method is sent directly to the endpoint
-        `/construction/metadata`.
+        The request returned from this method will be used by the caller (in a
+        different execution environment) to call the `/construction/metadata`
+        endpoint.
       operationId: constructionPreprocess
       tags:
         - Construction
@@ -352,23 +353,18 @@ paths:
                 $ref: '#/components/schemas/Error'
   /construction/metadata:
     post:
-      summary: Get Transaction Construction Metadata
+      summary: Get Metadata for Transaction Construction
       description: |
         Get any information required to construct a transaction for a specific
         network. Metadata returned here could be a recent hash to use, an
-        account sequence number, or even arbitrary chain state. It is up to the
-        client to correctly populate the options object with any
-        network-specific details to ensure the correct metadata is retrieved.
+        account sequence number, or even arbitrary chain state. The request
+        used when calling this endpoint is often created by calling
+        `/construction/preprocess` in an offline environment.
 
         It is important to clarify that this endpoint should not pre-construct
-        any transactions for the client (this should happen in the SDK). This
-        endpoint is left purposely unstructured because of the wide scope
+        any transactions for the client (this should happen in `/construction/payloads`).
+        This endpoint is left purposely unstructured because of the wide scope
         of metadata that could be required.
-
-        In a future version of the spec, we plan to pass an array of Rosetta
-        Operations to specify which metadata should be received and to create
-        a transaction in an accompanying SDK. This will help to insulate the
-        client from chain-specific details that are currently required here.
       operationId: constructionMetadata 
       tags:
         - Construction
@@ -393,12 +389,12 @@ paths:
                 $ref: '#/components/schemas/Error'
   /construction/payloads:
     post:
-      summary: Create Unsigned Transaction and Signing Payloads
+      summary: Generate an Unsigned Transaction and Signing Payloads
       description: |
-        ConstructTransaction is called with an array of operations and the response
-        from `/construction/metadata` (if applicable). It returns an
-        unsigned transaction blob and a collection of payloads that must be signed
-        by particular addresses using a certain SignatureType.
+        Payloads is called with an array of operations
+        and the response from `/construction/metadata`. It returns an
+        unsigned transaction blob and a collection of payloads that must
+        be signed by particular addresses using a certain SignatureType.
       operationId: constructionPayloads
       tags:
         - Construction
@@ -423,13 +419,13 @@ paths:
                 $ref: '#/components/schemas/Error'
   /construction/combine:
     post:
-      summary: Create Transaction from Signatures
+      summary: Create Network Transaction from Signatures
       description: |
         Combine creates a network-specific transaction from an unsigned
-        transaction and a collection of payload signatures.
+        transaction and an array of provided signatures.
 
-        The signed transaction returned from this method is sent directly to the
-        endpoint `/construction/submit`.
+        The signed transaction returned from this method will be sent to the
+        `/construction/submit` endpoint by the caller.
       operationId: constructionCombine
       tags:
         - Construction
@@ -454,12 +450,13 @@ paths:
                 $ref: '#/components/schemas/Error'
   /construction/parse:
     post:
-      summary: Parse Transaction
+      summary: Parse a Transaction
       description: |
-        ParseTransaction is called on both unsigned and signed transactions to
-        understand the intent of the formulated transaction. This is run as a
-        sanity check before signing (after ConstructTransaction) and before
-        broadcast (after Combine).
+        Parse is called on both unsigned and signed transactions to
+        understand the intent of the formulated transaction.
+
+        This is run as a sanity check before signing (after `/construction/payloads`)
+        and before broadcast (after `/construction/combine`). 
       operationId: constructionParse
       tags:
         - Construction
@@ -841,9 +838,7 @@ components:
     ConstructionMetadataResponse:
       description: |
         The ConstructionMetadataResponse returns network-specific metadata
-        used for transaction construction. It is likely that the client will
-        not inspect this metadata before passing it to a client SDK that uses
-        it for construction.
+        used for transaction construction.
       type: object
       required:
         - metadata
@@ -855,8 +850,8 @@ components:
             recent_block_hash: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5"
     ConstructionDeriveRequest:
       description: |
-        ConstructionDeriveRequest is the input to the Address method.
-        Network is provided in the request because some blockchains
+        ConstructionDeriveRequest is passed to the `/construction/derive`
+        endpoint. Network is provided in the request because some blockchains
         have different address formats for different networks.
         Metadata is provided in the request because some blockchains
         allow for multiple address types (i.e. different address
@@ -874,7 +869,8 @@ components:
           type: object
     ConstructionDeriveResponse:
       description: |
-        ConstructionDeriveResponse is the output of the Address method.
+        ConstructionDeriveResponse is returned by the `/construction/derive`
+        endpoint.
       type: object
       required:
         - address
@@ -887,8 +883,9 @@ components:
           type: object
     ConstructionPreprocessRequest:
       description: |
-        ConstructionPreprocessRequest is the input to the RequiredMetadata
-        method.
+        ConstructionPreprocessRequest is passed to the `/construction/preprocess`
+        endpoint so that a Rosetta implementation can determine which
+        metadata it needs to request for construction.
       type: object
       required:
         - network_identifier
@@ -908,15 +905,18 @@ components:
         be sent directly to `/construction/metadata`.
 
         If it is not necessary to make a request to `/construction/metadata`,
-        request should be null.
+        options should be null.
       type: object
       properties:
-        request:
+        options:
           type: object
+          description: |
+            The options that will be sent directly to `/construction/metadata` by
+            the caller.
     ConstructionPayloadsRequest:
       description: |
-        ConstructTransactionRequest is the input to
-        ConstructTransaction. It contains the network,
+        ConstructionPayloadsRequest is the request to
+        `/construction/payloads`. It contains the network,
         a slice of operations, and arbitrary metadata
         that was returned by the call to `/construction/metadata`.
       type: object
@@ -934,7 +934,10 @@ components:
           type: object
     ConstructionPayloadsResponse:
       description: |
-        ConstructTransactionResponse is the output of ConstructTransaction.
+        ConstructionTransactionResponse is returned by `/construction/payloads`. It
+        contains an unsigned transaction blob (that is usually needed to construct
+        the a network transaction from a collection of signatures) and an
+        array of payloads that must be signed by the caller.
       type: object
       required:
         - unsigned_transaction
@@ -948,7 +951,10 @@ components:
             $ref: '#/components/schemas/SigningPayload'
     ConstructionCombineRequest:
       description: |
-        CombineRequest is the input to Combine.
+        ConstructionCombineRequest is the input to the `/construction/combine`
+        endpoint. It contains the unsigned transaction blob returned by
+        `/construction/payloads` and all required signatures to create
+        a network transaction.
       type: object
       required:
         - network_identifier
@@ -965,19 +971,20 @@ components:
             $ref: '#/components/schemas/Signature'
     ConstructionCombineResponse:
       description: |
-        CombineResponse is the output of Combine.
-        The NetworkPayload will be sent directly to the Node API
+        ConstructionCombineResponse is returned by `/construction/combine`.
+        The network payload will be sent directly to the
         `construction/submit` endpoint.
       type: object
       required:
-        - network_payload
+        - signed_transaction 
       properties:
-        network_payload:
+        signed_transaction:
           type: string
     ConstructionParseRequest:
       description: |
-        ParseTransactionRequest is the input to ParseTransaction. It allows
-        the client to parse either an unsigned or signed transaction.
+        ConstructionParseRequest is the input to the `/construction/parse`
+        endpoint. It allows the caller to parse either an unsigned or
+        signed transaction.
       type: object
       required:
         - network_identifier
@@ -988,13 +995,19 @@ components:
           $ref: '#/components/schemas/NetworkIdentifier'
         signed:
           type: bool
+          description: |
+            Signed is a boolean indicating whether the transaction is signed.
         transaction:
           type: string
+          description: |
+            This must be either the unsigned transaction blob returned by
+            `/construction/payloads` or the signed transaction blob
+            returned by `/construction/combine`.
     ConstructionParseResponse:
       description: |
-        ParseTransactionResponse returns an array of operations that occur in
+        ConstructionParseResponse contains an array of operations that occur in
         a transaction blob. This should match the array of operations provided
-        to ConstructTransactionRequest.Operations.
+        to `/construction/preprocess` and `/construction/payloads`.
       type: object
       required:
         - operations
@@ -1005,6 +1018,9 @@ components:
           items:
             $ref: '#/components/schemas/Operation'
         signers:
+          description: |
+            All signers of a particular transaction. If the transaction
+            is unsigned, it should be empty.
           type: array
           items:
             type: string
@@ -1012,7 +1028,7 @@ components:
           type: object
     ConstructionHashRequest:
       description: |
-        TransactionHashRequest is the input of TransactionHash.
+        ConstructionHashRequest is the input to the `/construction/hash` endpoint.
       type: object
       required:
         - network_identifier
@@ -1024,7 +1040,7 @@ components:
           type: string
     ConstructionHashResponse:
       description: |
-        TransactionHashResponse is the output of TransactionHash.
+        ConstructionHashResponse is the output of the `/construction/hash` endpoint.
       type: object
       required:
         - transaction_hash
