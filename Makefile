@@ -1,4 +1,4 @@
-.PHONY: node-deps go-deps deps gen check-gen add-license check-license spellcheck shellcheck salus
+.PHONY: node-deps go-deps deps gen check-gen add-license check-license spellcheck shellcheck salus check-valid
 LICENCE_SCRIPT=addlicense -c "Coinbase, Inc." -l "apache" -v
 GO_INSTALL=GO111MODULE=off go get
 
@@ -13,6 +13,9 @@ deps: node-deps go-deps
 
 gen:
 	./codegen.sh;
+
+check-valid:
+	swagger-cli validate api.yaml
 
 check-gen: | gen
 	git diff --exit-code
@@ -32,4 +35,4 @@ shellcheck:
 salus:
 	docker run --rm -t -v ${PWD}:/home/repo coinbase/salus
 
-release: shellcheck spellcheck check-gen check-license salus
+release: check-valid shellcheck spellcheck check-gen check-license salus
