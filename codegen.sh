@@ -35,5 +35,6 @@ OUTPUT_FILE=api.json
 swagger-cli bundle api.yaml -o "${OUTPUT_FILE}";
 
 # Remove newlines from descriptions
+sed "${SED_IFLAG[@]}" 's/\\n\\n/\\n/g' "${OUTPUT_FILE}"; 
 sed "${SED_IFLAG[@]}" 's/\\n/ /g' "${OUTPUT_FILE}"; 
 sed "${SED_IFLAG[@]}" 's/ "/"/g' "${OUTPUT_FILE}";
