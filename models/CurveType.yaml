@@ -13,21 +13,8 @@
 # limitations under the License.
 
 description: |
-  Signature contains the payload that was signed, the public keys of the
-  keypairs used to produce the signature, the signature (encoded in hex),
-  and the SignatureType.
-type: object
-required:
-  - signing_payload
-  - public_key
-  - signature_type
-  - hex_bytes
-properties:
-  signing_payload:
-    $ref: "SigningPayload.yaml"
-  public_key:
-    $ref: "PublicKey.yaml"
-  signature_type:
-    $ref: "SignatureType.yaml"
-  hex_bytes:
-    type: string
+  CurveType is the type of cryptographic curve associated with a PublicKey. 
+type: string 
+enum:
+  - secp256k1
+  - edwards25519

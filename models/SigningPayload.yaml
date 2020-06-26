@@ -30,4 +30,4 @@ properties:
   hex_bytes:
     type: string
   signature_type:
-    $ref: "Signature.yaml"
+    $ref: "SignatureType.yaml"

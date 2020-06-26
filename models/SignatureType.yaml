@@ -13,8 +13,9 @@
 # limitations under the License.
 
 description: |
-  Curve is the type of cryptographic curve associated with a PublicKey. 
-type: string 
+  SignatureType is the type of a cryptographic signature.
+type: string
 enum:
-  - secp256k1
-  - edwards25519
+  - ecdsa
+  - ecdsa_recovery
+  - ed25519

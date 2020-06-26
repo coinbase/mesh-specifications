@@ -21,11 +21,11 @@ description: |
 type: object 
 required:
   - hex_bytes
-  - curve
+  - curve_type
 properties:
   hex_bytes:
     type: string
     description: |
       hex-encoded public key
-  curve:
-    $ref: "Curve.yaml"
+  curve_type:
+    $ref: "CurveType.yaml"
