@@ -1627,7 +1627,7 @@
            "$ref":"#/components/schemas/NetworkIdentifier"
           },
          "signed": {
-           "type":"bool",
+           "type":"boolean",
            "description":"Signed is a boolean indicating whether the transaction is signed."
           },
          "transaction": {
