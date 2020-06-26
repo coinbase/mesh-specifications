@@ -37,3 +37,7 @@ properties:
       An error is retriable if the same request may succeed if submitted
       again.
     type: boolean
+  metadata:
+    description: |
+      Metadata can be populated with additional error context.
+    type: object
