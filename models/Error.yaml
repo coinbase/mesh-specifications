@@ -28,12 +28,24 @@ properties:
     type: integer
     format: int32
     minimum: 0
+    example: 12
   message:
     description: |
       Message is a network-specific error message.
     type: string
+    example: "Invalid account format"
   retriable:
     description: |
       An error is retriable if the same request may succeed if submitted
       again.
     type: boolean
+  details:
+    type: object
+    description: |
+      Often times it is useful to return context specific
+      to the request that caused the error (i.e. a sample of the
+      stack trace or impacted account) in addition to the
+      standard error message.
+    example:
+      address: "0x1dcc4de8dec75d7aab85b567b6"
+      error: "not base64"
