@@ -229,13 +229,13 @@ In the near future, we will update this section with tips and helpful links for 
 Construction API implementation.
 
 ### Supported CurveTypes
-* secp256k1: 1SEC compressed 33-bytes.
-* edwards25519 =  y (255-bits) || x-sign-bit (32-bytes).
+* secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
+* edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf)
 
 ### Supported SignatureTypes
-* ecdsa = r (32-bytes) || s (32-bytes)
-* ecdsa_recovery = r (32-bytes) || s (32-bytes) || v (1-byte)
-* ed25519 = R (32-byte) || s (32-bytes)
+* ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes`
+* ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
+* ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
 
 ### Decoupled Signature Schemes
 CurveType and SignatureType are purposely decoupled as a curve could be used
