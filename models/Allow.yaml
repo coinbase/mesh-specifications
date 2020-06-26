@@ -23,6 +23,7 @@ required:
   - operation_statuses 
   - operation_types
   - errors
+  - historical_balance_lookup
 properties:
   operation_statuses:
     description: |
@@ -49,3 +50,8 @@ properties:
     type: array
     items:
       $ref: 'Error.yaml'
+  historical_balance_lookup:
+    type: boolean
+    description: |
+      Any Rosetta implementation that supports querying the balance
+      of an account at any height in the past should set this to true.
