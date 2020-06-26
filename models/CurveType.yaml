@@ -14,6 +14,9 @@
 
 description: |
   CurveType is the type of cryptographic curve associated with a PublicKey. 
+
+  * secp256k1 = SEC compressed 33-bytes.
+  * edwards25519 =  y (255-bits) || x-sign-bit (32-bytes).
 type: string 
 enum:
   - secp256k1
