@@ -228,11 +228,20 @@ code from this specification.
 In the near future, we will update this section with tips and helpful links for writing a
 Construction API implementation.
 
-## Decoupled Signature Schemes
+### Supported CurveTypes
+* secp256k1: 1SEC compressed 33-bytes.
+* edwards25519 =  y (255-bits) || x-sign-bit (32-bytes).
+
+### Supported SignatureTypes
+* ecdsa = r (32-bytes) || s (32-bytes)
+* ecdsa_recovery = r (32-bytes) || s (32-bytes) || v (1-byte)
+* ed25519 = R (32-byte) || s (32-bytes)
+
+### Decoupled Signature Schemes
 CurveType and SignatureType are purposely decoupled as a curve could be used
 with multiple signature types (i.e. `secp256k1:ECDSA` and `secp256k1:Schnorr`).
 
-### Missing CurveType or SignatureType
+### Adding New CurveTypes or SignatureTypes
 Unlike the Data API where there are no global type constraints (ex: you
 can specify any operation type), the Construction API has a clearly
 enumerated list of supported curves and signatures. Each one of these
