@@ -228,6 +228,26 @@ code from this specification.
 In the near future, we will update this section with tips and helpful links for writing a
 Construction API implementation.
 
+## Decoupled Signature Schemes
+CurveType and SignatureType are purposely decoupled as a curve could be used
+with multiple signature types (i.e. `secp256k1:ECDSA` and `secp256k1:Schnorr`).
+
+### Missing CurveType or SignatureType
+Unlike the Data API where there are no global type constraints (ex: you
+can specify any operation type), the Construction API has a clearly
+enumerated list of supported curves and signatures. Each one of these
+items has a clearly specified format that all implementations should
+expect to receive.
+
+If a curve or signature you are employing is not enumerated in the specification,
+you will need to open a PR against the specification to add it along with the standard
+format it will be represented in.
+
+It is up to the caller of a Construction API implementation to implement key generation
+and signing for a particular CurveType:SignatureType. There is a `keys` package
+in rosetta-sdk-go that is commonly used by callers and anyone
+in the community can implement additional schemes there.
+
 ## Deployment
 Although the Construction API is defined in the same interface as endpoints that
 are "online" (i.e. fetching a block with `/block`), it must be possible to deploy your Data API
