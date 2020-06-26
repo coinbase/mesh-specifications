@@ -391,6 +391,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /construction/create_payloads:
+    post:
+      summary: Create Signing Payloads
+      description: |
+        ConstructTransaction is called with an array of operations and the response
+        from `/construction/metadata` (if applicable). It returns an
+        unsigned transaction blob and a collection of payloads that must be signed
+        by particular addresses using a certain SignatureType.
+      operationId: constructionCreatePayloads
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionCreatePayloadsRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionCreatePayloadsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /construction/submit:
     post:
       summary: Submit a Signed Transaction
@@ -468,6 +498,8 @@ components:
       $ref: 'models/Timestamp.yaml'
     PublicKey:
       $ref: 'models/PublicKey.yaml'
+    SigningPayload:
+      $ref: 'models/SigningPayload.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -786,6 +818,39 @@ components:
       properties:
         request:
           type: object
+    ConstructionCreatePayloadsRequest:
+      description: |
+        ConstructTransactionRequest is the input to
+        ConstructTransaction. It contains the network,
+        a slice of operations, and arbitrary metadata
+        that was returned by the call to `/construction/metadata`.
+      type: object
+      required:
+        - network_identifier
+        - operations
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Operation'
+        metadata:
+          type: object
+    ConstructionCreatePayloadsResponse:
+      description: |
+        ConstructTransactionResponse is the output of ConstructTransaction.
+      type: object
+      required:
+        - unsigned_transaction
+        - payloads
+      properties:
+        unsigned_transaction:
+          type: string
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/SigningPayload'
     ConstructionSubmitRequest:
       description: |
         The transaction submission request includes a signed transaction.

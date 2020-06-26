@@ -1,0 +1,33 @@
+# Copyright 2020 Coinbase, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+description: |
+  SigningPayload is signed by the client with the keypair associated
+  with an address using the specified SignatureType.
+
+  [TODO] explain that signature_type is provided optionally
+  if there is a restriction. Otherwise, leave blank for default
+  or if multiple accepted (does not mean any signature type can
+  be used).
+type: object
+required:
+  - address
+  - hex_bytes
+properties:
+  address:
+    type: string
+  hex_bytes:
+    type: string
+  signature_type:
+    $ref: "Signature.yaml"
