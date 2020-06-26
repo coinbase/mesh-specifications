@@ -318,6 +318,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /construction/prepare_metadata:
+    post:
+      summary: Prepare a Request to Fetch Metadata
+      description: |
+        PrepareMetadata is called prior to ConstructTransaction to allow
+        a Rosetta API implementation to construct a request for any metadata
+        that is needed for transaction construction given (i.e. account nonce).
+
+        The request returned from this method is sent directly to the endpoint
+        `/construction/metadata`.
+      operationId: constructionPrepareMetadata
+      tags:
+        - Construction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionPrepareMetadataRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionPrepareMetadataResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /construction/metadata:
     post:
       summary: Get Transaction Construction Metadata
@@ -722,7 +754,37 @@ components:
       properties:
         address:
           type: string
+          description: |
+            Address in network-specific format.
         metadata:
+          type: object
+    ConstructionPrepareMetadataRequest:
+      description: |
+        ConstructionPrepareMetadataRequest is the input to the RequiredMetadata
+        method.
+      type: object
+      required:
+        - network_identifier
+        - operations
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Operation'
+        metadata:
+          type: object
+    ConstructionPrepareMetadataResponse:
+      description: |
+        ConstructionPrepareMetadataResponse contains the request that will
+        be sent directly to `/construction/metadata`.
+
+        If it is not necessary to make a request to `/construction/metadata`,
+        request should be null.
+      type: object
+      properties:
+        request:
           type: object
     ConstructionSubmitRequest:
       description: |
