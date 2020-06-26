@@ -790,6 +790,12 @@ components:
       description: |
         NetworkStatusResponse contains basic information about the node's
         view of a blockchain network.
+
+        If a Rosetta implementation prunes historical state, it should
+        populate the optional `oldest_block_identifier` field with the
+        oldest block available to query. If this is not populated,
+        it is assumed that the `genesis_block_identifier` is the oldest
+        queryable block.
       type: object
       required:
         - current_block_identifier
@@ -802,6 +808,8 @@ components:
         current_block_timestamp:
           $ref: '#/components/schemas/Timestamp'
         genesis_block_identifier:
+          $ref: '#/components/schemas/BlockIdentifier'
+        oldest_block_identifier:
           $ref: '#/components/schemas/BlockIdentifier'
         peers:
           type: array
