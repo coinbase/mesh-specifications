@@ -598,6 +598,8 @@ components:
           $ref: '#/components/schemas/Timestamp'
         genesis_block_identifier:
           $ref: '#/components/schemas/BlockIdentifier'
+        oldest_block_identifier:
+          $ref: '#/components/schemas/BlockIdentifier'
         peers:
           type: array
           items:
