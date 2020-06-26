@@ -199,7 +199,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MempoolRequest'
+              $ref: '#/components/schemas/NetworkRequest'
       responses:
         '200':
           description: Expected response to a valid request
@@ -508,16 +508,6 @@ components:
       properties:
         transaction:
           $ref: '#/components/schemas/Transaction'
-    MempoolRequest:
-      description: |
-        A MempoolRequest is utilized to retrieve all transaction identifiers in
-        the mempool for a particular network_identifier.
-      type: object
-      required:
-        - network_identifier
-      properties:
-        network_identifier:
-          $ref: '#/components/schemas/NetworkIdentifier'
     MempoolResponse:
       description: |
         A MempoolResponse contains all transaction identifiers in the mempool
