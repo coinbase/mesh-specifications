@@ -123,7 +123,7 @@ and never have access to private key material.
                              X Get hash of signed transaction +--------------> /construction/hash
 Broadcast Signed Transaction X to monitor status                     |
                              X                                       |
-                             X Submit Transaction +--------------------------> /construction/submit
+                             X Submit Transaction +--------------------------> /construction/submit (online)
                              X                                       |
                                                                      +
 ```
@@ -185,8 +185,8 @@ that worked with any blockchain.
 Now that you have some familiarity with the flow of operations, we recommend taking a look at the Rosetta API Docs:
 
 * [Overview](https://www.rosetta-api.org/docs/welcome.html)
-* [Data API](https://www.rosetta-api.org/docs/node_api_introduction.html)
-* [Construction API](https://www.rosetta-api.org/docs/wallet_api_introduction.html)
+* [Data API](https://www.rosetta-api.org/docs/data_api_introduction.html)
+* [Construction API](https://www.rosetta-api.org/docs/construction_api_introduction.html)
 
 If you have any questions, don't hesitate to reach out in our [community forum](https://community.rosetta-api.org).
 
