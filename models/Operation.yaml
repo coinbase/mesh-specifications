@@ -59,10 +59,8 @@ properties:
     $ref: 'AccountIdentifier.yaml'
   amount:
     $ref: 'Amount.yaml'
-  coin_identifier:
-    $ref: 'CoinIdentifier.yaml'
-  coin_action:
-    $ref: 'CoinAction.yaml'
+  coin_change:
+    $ref: 'CoinChange.yaml'
   metadata:
     type: object
     example:

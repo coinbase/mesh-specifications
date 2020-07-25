@@ -614,6 +614,8 @@ components:
       $ref: 'models/CoinAction.yaml'
     CoinIdentifier:
       $ref: 'models/CoinIdentifier.yaml'
+    CoinChange:
+      $ref: 'models/CoinChange.yaml'
     Coin:
       $ref: 'models/Coin.yaml'
 
