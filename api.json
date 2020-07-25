@@ -1,7 +1,7 @@
 {
  "openapi":"3.0.2",
  "info": {
-   "version":"1.4.0",
+   "version":"1.4.1",
    "title":"Rosetta",
    "description":"Build Once. Integrate Your Blockchain Everywhere.",
    "license": {
@@ -39,7 +39,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -81,7 +81,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -123,7 +123,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -165,7 +165,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -207,7 +207,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -249,7 +249,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -291,7 +291,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -333,7 +333,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -375,7 +375,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -417,7 +417,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -459,7 +459,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -501,7 +501,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -543,7 +543,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -585,7 +585,7 @@
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -622,12 +622,12 @@
            "content": {
              "application/json": {
                "schema": {
-                 "$ref":"#/components/schemas/ConstructionHashResponse"
+                 "$ref":"#/components/schemas/TransactionIdentifierResponse"
                 }
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -664,12 +664,12 @@
            "content": {
              "application/json": {
                "schema": {
-                 "$ref":"#/components/schemas/ConstructionSubmitResponse"
+                 "$ref":"#/components/schemas/TransactionIdentifierResponse"
                 }
               }
             }
           },
-         "default": {
+         "500": {
            "description":"unexpected error",
            "content": {
              "application/json": {
@@ -1678,18 +1678,6 @@
           }
         }
       },
-     "ConstructionHashResponse": {
-       "description":"ConstructionHashResponse is the output of the `/construction/hash` endpoint.",
-       "type":"object",
-       "required": [
-         "transaction_hash"
-        ],
-       "properties": {
-         "transaction_hash": {
-           "type":"string"
-          }
-        }
-      },
      "ConstructionSubmitRequest": {
        "description":"The transaction submission request includes a signed transaction.",
        "type":"object",
@@ -1706,8 +1694,8 @@
           }
         }
       },
-     "ConstructionSubmitResponse": {
-       "description":"A TransactionSubmitResponse contains the transaction_identifier of a submitted transaction that was accepted into the mempool.",
+     "TransactionIdentifierResponse": {
+       "description":"TransactionIdentifierResponse contains the transaction_identifier of a transaction that was submitted to either `/construction/hash` or `/construction/submit`.",
        "type":"object",
        "required": [
          "transaction_identifier"
