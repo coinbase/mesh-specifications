@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.0
+  version: 1.4.1
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
@@ -44,7 +44,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NetworkListResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -72,7 +72,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NetworkStatusResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -104,7 +104,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NetworkOptionsResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -143,7 +143,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BlockResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -189,7 +189,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BlockTransactionResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -215,7 +215,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MempoolResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -250,7 +250,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MempoolTransactionResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -293,7 +293,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountBalanceResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -323,7 +323,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstructionDeriveResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -356,7 +356,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstructionPreprocessResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -392,7 +392,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstructionMetadataResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -429,7 +429,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstructionPayloadsResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -460,7 +460,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstructionCombineResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -491,7 +491,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstructionParseResponse'
-        default:
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -518,8 +518,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConstructionHashResponse'
-        default:
+                $ref: '#/components/schemas/TransactionIdentifierResponse'
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -552,8 +552,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConstructionSubmitResponse'
-        default:
+                $ref: '#/components/schemas/TransactionIdentifierResponse'
+        '500':
           description: unexpected error
           content:
             application/json:
@@ -1054,15 +1054,6 @@ components:
           $ref: '#/components/schemas/NetworkIdentifier'
         signed_transaction:
           type: string
-    ConstructionHashResponse:
-      description: |
-        ConstructionHashResponse is the output of the `/construction/hash` endpoint.
-      type: object
-      required:
-        - transaction_hash
-      properties:
-        transaction_hash:
-          type: string
     ConstructionSubmitRequest:
       description: |
         The transaction submission request includes a signed transaction.
@@ -1075,10 +1066,11 @@ components:
           $ref: '#/components/schemas/NetworkIdentifier'
         signed_transaction:
           type: string
-    ConstructionSubmitResponse:
+    TransactionIdentifierResponse:
       description: |
-        A TransactionSubmitResponse contains the transaction_identifier of a
-        submitted transaction that was accepted into the mempool.
+        TransactionIdentifierResponse contains the transaction_identifier of a
+        transaction that was submitted to either `/construction/hash` or
+        `/construction/submit`.
       type: object
       required:
         - transaction_identifier
