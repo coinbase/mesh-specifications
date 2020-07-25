@@ -1,0 +1,26 @@
+# Copyright 2020 Coinbase, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+description: |
+  CoinIdentifier uniquely identifies a Coin.
+type: object
+required:
+  - identifier 
+properties:
+  identifier:
+    description: |
+      Identifier should be populated with a globally unique identifier
+      of a Coin. In Bitcoin, this identifier would be transaction_hash:index.
+    type: string
+    example: "0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1"

@@ -610,6 +610,14 @@ components:
       $ref: 'models/Signature.yaml'
     SignatureType:
       $ref: 'models/SignatureType.yaml'
+    CoinAction:
+      $ref: 'models/CoinAction.yaml'
+    CoinIdentifier:
+      $ref: 'models/CoinIdentifier.yaml'
+    CoinChange:
+      $ref: 'models/CoinChange.yaml'
+    Coin:
+      $ref: 'models/Coin.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -647,6 +655,15 @@ components:
             A single account may have a balance in multiple currencies.
           items:
             $ref: '#/components/schemas/Amount'
+        coins:
+          type: array
+          description: |
+            If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier
+            should be returned alongside the balance. It is highly recommended to
+            populate this field so that users of the Rosetta API implementation
+            don't need to maintain their own indexer to track their UTXOs.
+          items:
+            $ref: '#/components/schemas/Coin'
         metadata:
           description: |
             Account-based blockchains that utilize a nonce or sequence number

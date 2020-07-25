@@ -941,6 +941,9 @@
          "amount": {
            "$ref":"#/components/schemas/Amount"
           },
+         "coin_change": {
+           "$ref":"#/components/schemas/CoinChange"
+          },
          "metadata": {
            "type":"object",
            "example": {
@@ -1190,6 +1193,60 @@
          "ed25519"
         ]
       },
+     "CoinAction": {
+       "description":"CoinActions are different state changes that a Coin can undergo. When a Coin is created, it is coin_created. When a Coin is spent, it is coin_spent. It is assumed that a single Coin cannot be created or spent more than once.",
+       "type":"string",
+       "enum": [
+         "coin_created",
+         "coin_spent"
+        ]
+      },
+     "CoinIdentifier": {
+       "description":"CoinIdentifier uniquely identifies a Coin.",
+       "type":"object",
+       "required": [
+         "identifier"
+        ],
+       "properties": {
+         "identifier": {
+           "description":"Identifier should be populated with a globally unique identifier of a Coin. In Bitcoin, this identifier would be transaction_hash:index.",
+           "type":"string",
+           "example":"0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1"
+          }
+        }
+      },
+     "CoinChange": {
+       "description":"CoinChange is used to represent a change in state of a some coin identified by a coin_identifier. This object is part of the Operation model and must be populated for UTXO-based blockchains. Coincidentally, this abstraction of UTXOs allows for supporting both account-based transfers and UTXO-based transfers on the same blockchain (when a transfer is account-based, don't populate this model).",
+       "type":"object",
+       "required": [
+         "coin_identifier",
+         "coin_action"
+        ],
+       "properties": {
+         "coin_identifier": {
+           "$ref":"#/components/schemas/CoinIdentifier"
+          },
+         "coin_action": {
+           "$ref":"#/components/schemas/CoinAction"
+          }
+        }
+      },
+     "Coin": {
+       "description":"Coin contains its unique identifier and the amount it represents.",
+       "type":"object",
+       "required": [
+         "coin_identifier",
+         "amount"
+        ],
+       "properties": {
+         "coin_identifier": {
+           "$ref":"#/components/schemas/CoinIdentifier"
+          },
+         "amount": {
+           "$ref":"#/components/schemas/Amount"
+          }
+        }
+      },
      "AccountBalanceRequest": {
        "description":"An AccountBalanceRequest is utilized to make a balance request on the /account/balance endpoint. If the block_identifier is populated, a historical balance query should be performed.",
        "type":"object",
@@ -1225,6 +1282,13 @@
            "description":"A single account may have a balance in multiple currencies.",
            "items": {
              "$ref":"#/components/schemas/Amount"
+            }
+          },
+         "coins": {
+           "type":"array",
+           "description":"If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier should be returned alongside the balance. It is highly recommended to populate this field so that users of the Rosetta API implementation don't need to maintain their own indexer to track their UTXOs.",
+           "items": {
+             "$ref":"#/components/schemas/Coin"
             }
           },
          "metadata": {
