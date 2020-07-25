@@ -13,7 +13,8 @@
 # limitations under the License.
 
 description: |
-  TODO
+  Coin contains its unique identifier and the amount
+  it represents.
 type: object
 required:
   - coin_identifier
