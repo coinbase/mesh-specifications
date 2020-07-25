@@ -610,6 +610,12 @@ components:
       $ref: 'models/Signature.yaml'
     SignatureType:
       $ref: 'models/SignatureType.yaml'
+    CoinAction:
+      $ref: 'models/CoinAction.yaml'
+    CoinIdentifier:
+      $ref: 'models/CoinIdentifier.yaml'
+    Coin:
+      $ref: 'models/Coin.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -647,6 +653,12 @@ components:
             A single account may have a balance in multiple currencies.
           items:
             $ref: '#/components/schemas/Amount'
+        coins:
+          type: array
+          description: |
+            TODO
+          items:
+            $ref: '#/components/schemas/Coin'
         metadata:
           description: |
             Account-based blockchains that utilize a nonce or sequence number
