@@ -1004,7 +1004,7 @@
         }
       },
      "SyncStatus": {
-       "description":"SyncStatus is used to provide additional context about an implementation's sync status. It is often used to indicate that an implementation is healthy when it cannot be queried  until some pre-sync occurs. If an implementation is immediately queryable and no pre-sync is required, this model is often not populated.",
+       "description":"SyncStatus is used to provide additional context about an implementation's sync status. It is often used to indicate that an implementation is healthy when it cannot be queried  until some sync phase occurs. If an implementation is immediately queryable, this model is often not populated.",
        "type":"object",
        "required": [
          "current_index"
