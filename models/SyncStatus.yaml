@@ -1,0 +1,45 @@
+# Copyright 2020 Coinbase, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+description: |
+  SyncStatus is used to provide additional context about an
+  implementation's sync status. It is often used to indicate
+  that an implementation is healthy when it cannot be queried 
+  until some sync phase occurs.
+
+  If an implementation is immediately queryable, this model is
+  often not populated.
+type: object
+required:
+  - current_index
+properties:
+  current_index:
+    description: |
+      CurrentIndex is the index of the last synced block in the
+      current stage.
+    type: integer
+    format: int64
+    example: 100 
+  target_index:
+    description: |
+      TargetIndex is the index of the block that the implementation
+      is attempting to sync to in the current stage.
+    type: integer
+    format: int64
+    example: 150 
+  stage:
+    description: |
+      Stage is the phase of the sync process.
+    type: string
+    example: "header sync"
