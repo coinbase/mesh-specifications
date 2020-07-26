@@ -1003,6 +1003,32 @@
           }
         }
       },
+     "SyncStatus": {
+       "description":"SyncStatus is used to provide additional context about an implementation's sync status. It is often used to indicate that an implementation is healthy when it cannot be queried  until some pre-sync occurs. If an implementation is immediately queryable and no pre-sync is required, this model is often not populated.",
+       "type":"object",
+       "required": [
+         "current_index"
+        ],
+       "properties": {
+         "current_index": {
+           "description":"CurrentIndex is the index of the last synced block in the current stage.",
+           "type":"integer",
+           "format":"int64",
+           "example": 100
+          },
+         "target_index": {
+           "description":"TargetIndex is the index of the block that the implementation is attempting to sync to in the current stage.",
+           "type":"integer",
+           "format":"int64",
+           "example": 150
+          },
+         "stage": {
+           "description":"Stage is the phase of the sync process.",
+           "type":"string",
+           "example":"header sync"
+          }
+        }
+      },
      "Peer": {
        "description":"A Peer is a representation of a node's peer.",
        "type":"object",
@@ -1457,7 +1483,7 @@
         }
       },
      "NetworkStatusResponse": {
-       "description":"NetworkStatusResponse contains basic information about the node's view of a blockchain network. If a Rosetta implementation prunes historical state, it should populate the optional `oldest_block_identifier` field with the oldest block available to query. If this is not populated, it is assumed that the `genesis_block_identifier` is the oldest queryable block.",
+       "description":"NetworkStatusResponse contains basic information about the node's view of a blockchain network. It is assumed that any BlockIdentifier.Index less than or equal to CurrentBlockIdentifier.Index can be queried. If a Rosetta implementation prunes historical state, it should populate the optional `oldest_block_identifier` field with the oldest block available to query. If this is not populated, it is assumed that the `genesis_block_identifier` is the oldest queryable block. If a Rosetta implementation performs some pre-sync before it is possible to query blocks, sync_status should be populated so that clients can still monitor healthiness. Without this field, it may appear that the implementation is stuck syncing and needs to be terminated.",
        "type":"object",
        "required": [
          "current_block_identifier",
@@ -1477,6 +1503,9 @@
           },
          "oldest_block_identifier": {
            "$ref":"#/components/schemas/BlockIdentifier"
+          },
+         "sync_status": {
+           "$ref":"#/components/schemas/SyncStatus"
           },
          "peers": {
            "type":"array",
