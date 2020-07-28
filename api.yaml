@@ -162,6 +162,9 @@ paths:
         Fetching a transaction by hash is considered an Explorer Method
         (which is classified under the Future Work section).
 
+        This method can be used to let consumers to paginate results when the 
+        block trasactions count is too big to be returned in a single BlockResponse.
+
         Calling this endpoint requires reference to a BlockIdentifier because
         transaction parsing can change depending on which block contains the
         transaction. For example, in Bitcoin it is necessary to know which block
