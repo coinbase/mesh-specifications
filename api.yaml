@@ -886,6 +886,12 @@ components:
       description: |
         The ConstructionMetadataResponse returns network-specific metadata
         used for transaction construction.
+
+        Optionally, the implementer can return the suggested fee associated
+        with the transaction being constructed. The caller may use this info
+        to adjust the intent of the transaction or to create a transaction with
+        a different account that can pay the suggested fee. Suggested fee is an array
+        in case fee payment must occur in multiple currencies.
       type: object
       required:
         - metadata
@@ -895,6 +901,10 @@ components:
           example:
             account_sequence: 23
             recent_block_hash: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5"
+        suggested_fee:
+          type: array
+          items:
+            $ref: '#/components/schemas/Amount'
     ConstructionDeriveRequest:
       description: |
         ConstructionDeriveRequest is passed to the `/construction/derive`
