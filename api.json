@@ -1632,7 +1632,8 @@
             }
           },
          "suggested_fee_multiplier": {
-           "type":"double",
+           "type":"number",
+           "format":"double",
            "minimum": 0
           }
         }
