@@ -343,6 +343,9 @@ paths:
         The request returned from this method will be used by the caller (in a
         different execution environment) to call the `/construction/metadata`
         endpoint.
+
+        This request will be sent UNMODIFIED to this endpoint. You
+        should not expect the caller to inspect or modify this request.
       operationId: constructionPreprocess
       tags:
         - Construction
@@ -372,8 +375,12 @@ paths:
         Get any information required to construct a transaction for a specific
         network. Metadata returned here could be a recent hash to use, an
         account sequence number, or even arbitrary chain state. The request
-        used when calling this endpoint is often created by calling
-        `/construction/preprocess` in an offline environment.
+        used when calling this endpoint is created by calling `/construction/preprocess`
+        in an offline environment.
+
+        You should NEVER assume that the request sent to this endpoint will be
+        created by the caller or populated with any custom parameters. This must
+        occur in `/construction/preprocess`.
 
         It is important to clarify that this endpoint should not pre-construct
         any transactions for the client (this should happen in `/construction/payloads`).
@@ -943,6 +950,10 @@ components:
         ConstructionPreprocessRequest is passed to the `/construction/preprocess`
         endpoint so that a Rosetta implementation can determine which
         metadata it needs to request for construction.
+
+        Metadata provided in this object should NEVER be a product
+        of live data. Any live data MUST be fetched in a call
+        to `/construction/metadata`.
 
         The caller can provide a max fee they are willing
         to pay for a transaction. This is an array in the case fees
