@@ -340,12 +340,11 @@ paths:
         request for any metadata that is needed for transaction construction
         given (i.e. account nonce).
 
-        The request returned from this method will be used by the caller (in a
-        different execution environment) to call the `/construction/metadata`
-        endpoint.
-
-        This request will be sent UNMODIFIED to this endpoint. You
-        should not expect the caller to inspect or modify this request.
+        The `options` object returned from this endpoint will be sent to the `/construction/metadata`
+        endpoint UNMODIFIED by the caller (in an offline execution environment). If
+        your Construction API implementation has configuration options, they MUST
+        be specified in the `/construction/preprocess` request (in the `metadata`
+        field).
       operationId: constructionPreprocess
       tags:
         - Construction
@@ -952,8 +951,10 @@ components:
         metadata it needs to request for construction.
 
         Metadata provided in this object should NEVER be a product
-        of live data. Any live data MUST be fetched in a call
-        to `/construction/metadata`.
+        of live data (i.e. the caller must follow some network-specific
+        data fetching strategy outside of the Construction API to populate
+        required Metadata). If live data is required for construction, it MUST
+        be fetched in the call to `/construction/metadata`.
 
         The caller can provide a max fee they are willing
         to pay for a transaction. This is an array in the case fees
