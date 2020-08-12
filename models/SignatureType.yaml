@@ -18,8 +18,10 @@ description: |
   * ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes`
   * ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
   * ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
+  * ecschnorr: `R (64-bytes) || s (64-bytes)` - `128 bytes`
 type: string
 enum:
   - ecdsa
   - ecdsa_recovery
   - ed25519
+  - ecschnorr
