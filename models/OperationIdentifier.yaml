@@ -28,7 +28,7 @@ properties:
     type: integer
     format: int64
     minimum: 0
-    example: 1
+    example: 5
   network_index:
     description: |
       Some blockchains specify an operation index that is essential for client use. For example,

@@ -787,7 +787,7 @@
            "type":"integer",
            "format":"int64",
            "minimum": 0,
-           "example": 1
+           "example": 5
           },
          "network_index": {
            "description":"Some blockchains specify an operation index that is essential for client use. For example, Bitcoin uses a network_index to identify which UTXO was used in a transaction. network_index should not be populated if there is no notion of an operation index in a blockchain (typically most account-based blockchains).",
@@ -918,10 +918,10 @@
             },
            "example": [
               {
-               "index": 0,
-               "operation_identifier": {
-                 "index": 0
-                }
+               "index": 1
+              },
+              {
+               "index": 2
               }
             ]
           },
