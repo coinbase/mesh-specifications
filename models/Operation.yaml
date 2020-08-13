@@ -36,9 +36,8 @@ properties:
     items:
       $ref: 'OperationIdentifier.yaml'
     example:
-      - index: 0
-        operation_identifier:
-          index: 0
+      - index: 1
+      - index: 2
   type:
     description: |
       The network-specific type of the operation. Ensure that any type that can be returned here is also
