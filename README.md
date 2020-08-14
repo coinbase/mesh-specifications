@@ -236,6 +236,9 @@ Construction API implementation.
 * ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes`
 * ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
 * ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
+* schnorr_1: `r (32-bytes) || s (32-bytes)` - `64 bytes`
+
+`schnorr_1` is a EC-Schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first. Refer to [Zilliqa Technical Whitepaper - Appendix A: Schnorr Digital Signature](https://docs.zilliqa.com/whitepaper.pdf) for details.)
 
 ### Decoupled Signature Schemes
 CurveType and SignatureType are purposely decoupled as a curve could be used
