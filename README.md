@@ -238,7 +238,7 @@ Construction API implementation.
 * ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
 * schnorr_1: `r (32-bytes) || s (32-bytes)` - `64 bytes`
 
-`schnorr_1` is a EC-Schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first. Refer to [Zilliqa Technical Whitepaper - Appendix A: Schnorr Digital Signature](https://docs.zilliqa.com/whitepaper.pdf) for details.)
+`schnorr_1` is a EC-Schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first. Refer to [Zilliqa's Schnorr Library](https://github.com/Zilliqa/schnorr/blob/master/src/libSchnorr/src/Schnorr.cpp#L86) and [Zilliqa Technical Whitepaper - Appendix A: Schnorr Digital Signature](https://docs.zilliqa.com/whitepaper.pdf) for details.)
 
 ### Decoupled Signature Schemes
 CurveType and SignatureType are purposely decoupled as a curve could be used
