@@ -1063,7 +1063,7 @@ components:
             $ref: '#/components/schemas/Operation'
         signers:
           description: |
-            All signers of a particular transaction. If the transaction
+            All signers (addresses) of a particular transaction. If the transaction
             is unsigned, it should be empty.
           type: array
           items:
