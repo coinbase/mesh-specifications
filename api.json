@@ -1759,7 +1759,7 @@
             }
           },
          "signers": {
-           "description":"All signers of a particular transaction. If the transaction is unsigned, it should be empty.",
+           "description":"All signers (addresses) of a particular transaction. If the transaction is unsigned, it should be empty.",
            "type":"array",
            "items": {
              "type":"string"
