@@ -19,11 +19,11 @@ description: |
   * ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
   * ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
   * schnorr_1: `r (32-bytes) || s (32-bytes)` - `64 bytes`  (schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first.)
-  * schnorr_tweedle_fq: `r (32-bytes) || s (32-bytes)` - `64 bytes`  (schnorr signature for tweedle Fq curve w/ Poseidon hash function implemented by O(1) Labs where both `r` and `s` are scalars encoded as `32-bytes` values, least significant byte first. https://github.com/CodaProtocol/signer-reference/blob/master/schnorr.ml )
+  * schnorr_poseidon: `r (32-bytes) || s (32-bytes)` - `64 bytes`  (schnorr signature w/ Poseidon hash function implemented by O(1) Labs where both `r` and `s` are scalars encoded as `32-bytes` values, least significant byte first. https://github.com/CodaProtocol/signer-reference/blob/master/schnorr.ml )
 type: string
 enum:
   - ecdsa
   - ecdsa_recovery
   - ed25519
   - schnorr_1
-  - schnorr_tweedle_fq
+  - schnorr_poseidon
