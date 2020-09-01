@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.2
+  version: 1.4.3
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
@@ -1003,11 +1003,16 @@ components:
           minimum: 0.0
     ConstructionPreprocessResponse:
       description: |
-        ConstructionPreprocessResponse contains the request that will
-        be sent directly to `/construction/metadata`.
+        ConstructionPreprocessResponse contains `options` that will
+        be sent unmodified to `/construction/metadata`. If it is
+        not necessary to make a request to `/construction/metadata`,
+        `options` should be omitted. 
 
-        If it is not necessary to make a request to `/construction/metadata`,
-        options should be null.
+        Some blockchains require the PublicKey of particular AccountIdentifiers
+        to construct a valid transaction. To fetch these PublicKeys, populate
+        `required_public_keys` with the AccountIdentifiers associated with the desired
+        PublicKeys. If it is not necessary to retrieve any PublicKeys
+        for construction, `required_public_keys` should be omitted.
       type: object
       properties:
         options:
@@ -1015,12 +1020,20 @@ components:
           description: |
             The options that will be sent directly to `/construction/metadata` by
             the caller.
+        required_public_keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountIdentifier'
     ConstructionPayloadsRequest:
       description: |
         ConstructionPayloadsRequest is the request to
         `/construction/payloads`. It contains the network,
         a slice of operations, and arbitrary metadata
         that was returned by the call to `/construction/metadata`.
+
+        Optionally, the request can also include an array
+        of PublicKeys associated with the AccountIdentifiers
+        returned in ConstructionPreprocessResponse.
       type: object
       required:
         - network_identifier
@@ -1034,6 +1047,10 @@ components:
             $ref: '#/components/schemas/Operation'
         metadata:
           type: object
+        public_keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicKey'
     ConstructionPayloadsResponse:
       description: |
         ConstructionTransactionResponse is returned by `/construction/payloads`. It
