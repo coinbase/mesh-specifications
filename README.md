@@ -232,14 +232,18 @@ Construction API implementation.
 * secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
 * secp256r1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
 * edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf)
+* tweedle: 1st pk : Fq.t (32 bytes) || 2nd pk : Fq.t (32 bytes) (https://github.com/CodaProtocol/coda/blob/develop/rfcs/0038-rosetta-construction-api.md#marshal-keys)
 
 ### Supported SignatureTypes
 * ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes`
 * ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
 * ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
 * schnorr_1: `r (32-bytes) || s (32-bytes)` - `64 bytes`
+* schnorr_poseidon: `r (32-bytes) || s (32-bytes) where s = Hash(1st pk || 2nd pk || r)` - `64 bytes`
 
 `schnorr_1` is a EC-Schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first. Refer to [Zilliqa's Schnorr Library](https://github.com/Zilliqa/schnorr/blob/master/src/libSchnorr/src/Schnorr.cpp#L86) and [Zilliqa Technical Whitepaper - Appendix A: Schnorr Digital Signature](https://docs.zilliqa.com/whitepaper.pdf) for details.)
+
+`schnorr_poseidon` is an EC-schnorr signature with Poseidon hash function implemented by O(1) Labs where both `r` and `s` are scalars encoded as `32-bytes` little-endian values. Refer to [Coda's signer reference implementation](https://github.com/CodaProtocol/signer-reference/blob/master/schnorr.ml#L92)
 
 ### Decoupled Signature Schemes
 CurveType and SignatureType are purposely decoupled as a curve could be used
