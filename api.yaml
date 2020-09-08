@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.3
+  version: 1.4.4
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
@@ -304,9 +304,9 @@ paths:
                 $ref: '#/components/schemas/Error'
   /construction/derive:
     post:
-      summary: Derive an Address from a PublicKey
+      summary: Derive an AccountIdentifier from a PublicKey
       description: |
-        Derive returns the network-specific address associated with a public key.
+        Derive returns the AccountIdentifier associated with a public key.
 
         Blockchains that require an on-chain action to create an
         account should not implement this method.
@@ -414,7 +414,7 @@ paths:
         Payloads is called with an array of operations
         and the response from `/construction/metadata`. It returns an
         unsigned transaction blob and a collection of payloads that must
-        be signed by particular addresses using a certain SignatureType.
+        be signed by particular AccountIdentifiers using a certain SignatureType.
 
         The array of operations provided in transaction construction often times
         can not specify all "effects" of a transaction (consider invoked transactions
@@ -951,13 +951,13 @@ components:
         ConstructionDeriveResponse is returned by the `/construction/derive`
         endpoint.
       type: object
-      required:
-        - address
       properties:
         address:
           type: string
           description: |
-            Address in network-specific format.
+            [DEPRECATED by `account_identifier` in `v1.4.4`] Address in network-specific format.
+        account_identifier:
+          $ref: '#/components/schemas/AccountIdentifier'
         metadata:
           type: object
     ConstructionPreprocessRequest:
@@ -1138,7 +1138,6 @@ components:
       type: object
       required:
         - operations
-        - signers
       properties:
         operations:
           type: array
@@ -1146,11 +1145,15 @@ components:
             $ref: '#/components/schemas/Operation'
         signers:
           description: |
-            All signers (addresses) of a particular transaction. If the transaction
+            [DEPRECATED by `account_identifier_signers` in `v1.4.4`] All signers (addresses) of a particular transaction. If the transaction
             is unsigned, it should be empty.
           type: array
           items:
             type: string
+        account_identifier_signers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountIdentifier'
         metadata:
           type: object
     ConstructionHashRequest:
