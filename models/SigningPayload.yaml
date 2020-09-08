@@ -14,21 +14,22 @@
 
 description: |
   SigningPayload is signed by the client with the keypair associated
-  with an address using the specified SignatureType.
+  with an AccountIdentifier using the specified SignatureType.
 
   SignatureType can be optionally populated if there is
   a restriction on the signature scheme that can be
   used to sign the payload.
 type: object
 required:
-  - address
   - hex_bytes
 properties:
   address:
     type: string
     description: |
-      The network-specific address of the account that should sign
+      [DEPRECATED by `account_identifier` in `v1.4.4`] The network-specific address of the account that should sign
       the payload.
+  account_identifier:
+    $ref: 'AccountIdentifier.yaml'
   hex_bytes:
     type: string
   signature_type:
