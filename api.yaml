@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.4
+  version: 1.4.5
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
@@ -877,9 +877,12 @@ components:
     ConstructionMetadataRequest:
       description: |
         A ConstructionMetadataRequest is utilized to get information required
-        to construct a transaction. The Options object used to specify which
-        metadata to return is left purposely unstructured to allow flexibility
-        for implementers.
+        to construct a transaction.
+
+        The Options object used to specify which metadata to return is left
+        purposely unstructured to allow flexibility for implementers. Options
+        is not required in the case that there is network-wide metadata of
+        interest.
 
         Optionally, the request can also include an array
         of PublicKeys associated with the AccountIdentifiers
@@ -887,7 +890,6 @@ components:
       type: object
       required:
         - network_identifier
-        - options
       properties:
         network_identifier:
           $ref: '#/components/schemas/NetworkIdentifier'
