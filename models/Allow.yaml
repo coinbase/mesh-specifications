@@ -59,7 +59,10 @@ properties:
   call_methods:
     type: array
     description: |
-      blah
+      All methods that are supported by the /call endpoint. Communicating
+      which parameters should be provided to /call is the responsibility
+      of the implementer (this is en lieu of defining an entire type
+      system and requiring the implementer to define that in Allow).
     items:
       type: string
       example: "eth_call"
