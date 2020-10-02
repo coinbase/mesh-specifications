@@ -1285,7 +1285,7 @@ components:
           example:
             count: 1000
         idempotent:
-          type: bool
+          type: boolean
           description: |
             Idempotent indicates that if `/call` is invoked with the same
             CallRequest again, at any point in time, it will return the same
