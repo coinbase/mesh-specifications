@@ -572,11 +572,21 @@ paths:
     post:
       summary: Make a Network-Specific Call 
       description: |
-        Call an arbitrary network-specific function.
+        Call an arbitrary network-specific function with any network-specific
+        parameters.
 
         This is NOT a replacement for implementing Rosetta API endpoints. However,
         this endpoint can be used by other Rosetta modules to provide a Rosetta API
-        interface.
+        interface without introducing additional complexity into a base Rosetta
+        implementation.
+
+        The guidance for what this endpoint should do is purposely left vague. In the
+        generic case, anyone could implement an entire Rosetta API implementation on top
+        of this endpoint.
+
+        This is exposed so that an SDK parsed result to some native queries can be provided
+        to the caller (i.e. loading the ABI of a smart contract and providing parsed
+        results to the caller).
       operationId: call 
       tags:
         - Call 
@@ -1228,7 +1238,7 @@ components:
           type: object
     CallRequest:
       description: |
-        blah
+        CallRequest is the input to the `/call` endpoint.
       type: object
       required:
         - network_identifier
@@ -1240,18 +1250,26 @@ components:
         method:
           type: string
           description: |
-            blah
+            Method is some network-specific procedure call. This method could
+            map to a network-specific RPC endpoint, a method in an SDK generated
+            from a smart contract, or some hybrid of the two.
+
+            The implementation must define all available methods in the
+            Allow object. However, it is up to the caller to determine
+            which parameters to provide when invoking `/call`.
           example: "eth_call"
         parameters:
           type: object
           description: |
-            blah
+            Parameters is some network-specific argument for a method. It is
+            up to the caller to determine which parameters to provide when invoking
+            `/call`.
           example:
             block_number: 23
             address: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5"
     CallResponse:
       description: |
-        blah
+        CallResponse contains the result of a `/call` invocation.
       type: object
       required:
         - result
@@ -1260,16 +1278,22 @@ components:
         result:
           type: object
           description: |
-            blah
+            Result contains the result of the `/call` invocation. This result
+            will not be inspected or interpreted by Rosetta tooling and is
+            left to the caller to decode.
           example:
             count: 1000
         idempotent:
           type: bool
           description: |
-            if we call again with same args, will we get the same result
+            Idempotent indicates that if `/call` is invoked with the same
+            CallRequest again, at any point in time, it will return the same
+            CallResponse.
 
-            implementers should be very conservative about returning true here.
-            integrators will likely cache the result of calls if this is true.
+            Integrators may cache the CallResponse if this is set to true
+            to avoid making unnecessary calls to the Rosetta implementation. For
+            this reason, implementers should be very conservative about returning
+            true here or they could cause issues for the caller.
 
     # Miscellaneous
     Error:
