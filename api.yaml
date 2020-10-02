@@ -568,6 +568,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /call:
+    post:
+      summary: Make a Network-Specific Call 
+      description: |
+        Call an arbitrary network-specific function.
+
+        This is NOT a replacement for implementing Rosetta API endpoints. However,
+        this endpoint can be used by other Rosetta modules to provide a Rosetta API
+        interface.
+      operationId: call 
+      tags:
+        - Call 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResponse'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     # Identifiers
@@ -1195,6 +1226,50 @@ components:
           $ref: '#/components/schemas/TransactionIdentifier'
         metadata:
           type: object
+    CallRequest:
+      description: |
+        blah
+      type: object
+      required:
+        - network_identifier
+        - method
+        - parameters
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        method:
+          type: string
+          description: |
+            blah
+          example: "eth_call"
+        parameters:
+          type: object
+          description: |
+            blah
+          example:
+            block_number: 23
+            address: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5"
+    CallResponse:
+      description: |
+        blah
+      type: object
+      required:
+        - result
+        - idempotent
+      properties:
+        result:
+          type: object
+          description: |
+            blah
+          example:
+            count: 1000
+        idempotent:
+          type: bool
+          description: |
+            if we call again with same args, will we get the same result
+
+            implementers should be very conservative about returning true here.
+            integrators will likely cache the result of calls if this is true.
 
     # Miscellaneous
     Error:
