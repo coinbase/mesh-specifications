@@ -570,23 +570,24 @@ paths:
                 $ref: '#/components/schemas/Error'
   /call:
     post:
-      summary: Make a Network-Specific Call 
+      summary: Make a Network-Specific Procedure Call 
       description: |
-        Call an arbitrary network-specific function with any network-specific
-        parameters.
+        Call invokes an arbitrary, network-specific procedure call with network-specific
+        parameters. The guidance for what this endpoint should or could do is
+        purposely left vague. In Ethereum, this could be used to invoke `eth_call`
+        to implement an entire Rosetta API interface for some smart contract that
+        is not parsed by the implementation creator (like a DEX). This endpoint
+        could also be used to provide access to data that does not map
+        to any Rosetta models instead of requiring an integrator to use some
+        network-specific SDK and call some network-specific endpoint (like surfacing
+        staking parameters).
 
-        This is NOT a replacement for implementing Rosetta API endpoints. However,
-        this endpoint can be used by other Rosetta modules to provide a Rosetta API
-        interface without introducing additional complexity into a base Rosetta
-        implementation.
-
-        The guidance for what this endpoint should do is purposely left vague. In the
-        generic case, anyone could implement an entire Rosetta API implementation on top
-        of this endpoint.
-
-        This is exposed so that an SDK parsed result to some native queries can be provided
-        to the caller (i.e. loading the ABI of a smart contract and providing parsed
-        results to the caller).
+        Call is NOT a replacement for implementing Rosetta API endpoints or mapping
+        network-specific data to Rosetta models. Rather, it enables developers to build
+        additional Rosetta API interfaces for things they care about without introducing
+        complexity into a base-level Rosetta implementation. Simply put, imagine
+        that the average integrator will use layered Rosetta API implementations
+        that each surfaces unique data.
       operationId: call 
       tags:
         - Call 
