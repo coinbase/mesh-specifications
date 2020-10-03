@@ -3,9 +3,12 @@ description: |
   BalanceExemption could increase above, decrease below, or
   equal the computed balance.
 
-  * greater_or_equal: The live balance may increase above or equal the computed balance.
-  * less_or_equal: The live balance may decrease below or equal the computed balance.
-  * any: The live balance may increase above, decrease below, or equal the computed balance.
+  * greater_or_equal: The live balance may increase above or equal the computed balance. This typically
+    occurs with staking rewards that accrue on each block.
+  * less_or_equal: The live balance may decrease below or equal the computed balance. This typically
+    occurs as balance moves from locked to spendable on a vesting account.
+  * any: The live balance may increase above, decrease below, or equal the computed balance. This
+    typically occurs with tokens that have a dynamic supply. 
 type: string
 enum:
   - greater_or_equal

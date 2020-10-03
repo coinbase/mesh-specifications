@@ -1,9 +1,21 @@
 description: |
-  blah
+  BalanceExemption indicates that the balance for a particular account could
+  change without a corresponding Operation. This typically occurs with staking
+  rewards, vesting accounts, and currencies with a dynamic supply.
+
+  BalanceExemptions should be used extremely conservatively as they may
+  introduce significant complexity for integrators.
+
+  If you rely on any BalanceExemptions, you MUST implement historical
+  balance lookup.
 type: object
 properties:
-  sub_account_identifier:
-    $ref: 'SubAccountIdentifier.yaml' 
+  sub_account_address:
+    description: |
+      # TODO: this should be sub account address so that we can cover 
+      # all subaccounts regardless of metadata
+    type: string
+    example: "staking"
   currency:
     $ref: 'Currency.yaml'
   exemption_type:
