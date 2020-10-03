@@ -21,10 +21,10 @@ description: |
     occurs with staking rewards that accrue on each block.
   * less_or_equal: The live balance may decrease below or equal the computed balance. This typically
     occurs as balance moves from locked to spendable on a vesting account.
-  * any: The live balance may increase above, decrease below, or equal the computed balance. This
+  * dynamic: The live balance may increase above, decrease below, or equal the computed balance. This
     typically occurs with tokens that have a dynamic supply.
 type: string
 enum:
   - greater_or_equal
   - less_or_equal
-  - any
+  - dynamic
