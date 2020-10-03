@@ -310,6 +310,7 @@ endpoints (other than `/construction/metadata` and `/construction/submit`).
 * `/block/*`
 * `/account/*`
 * `/mempool/*`
+* `/call`
 * `/construction/metadata`
 * `/construction/submit`
 
