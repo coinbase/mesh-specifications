@@ -1,0 +1,10 @@
+description: |
+  blah
+type: object
+properties:
+  sub_account_identifier:
+    $ref: 'SubAccountIdentifier.yaml' 
+  currency:
+    $ref: 'Currency.yaml'
+  exemption_type:
+    $ref: 'ExemptionType.yaml'

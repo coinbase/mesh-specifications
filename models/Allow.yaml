@@ -25,6 +25,7 @@ required:
   - errors
   - historical_balance_lookup
   - call_methods
+  - balance_exemptions
 properties:
   operation_statuses:
     description: |
@@ -66,3 +67,11 @@ properties:
     items:
       type: string
       example: "eth_call"
+  balance_exemptions:
+    type: array
+    description: |
+      blah 
+
+      if exemptions provided, you MUST support historical balance lookup.
+    items:
+      $ref: 'BalanceExemption.yaml'
