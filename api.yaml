@@ -568,6 +568,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /call:
+    post:
+      summary: Make a Network-Specific Procedure Call 
+      description: |
+        Call invokes an arbitrary, network-specific procedure call with network-specific
+        parameters. The guidance for what this endpoint should or could do is
+        purposely left vague. In Ethereum, this could be used to invoke `eth_call`
+        to implement an entire Rosetta API interface for some smart contract that
+        is not parsed by the implementation creator (like a DEX). This endpoint
+        could also be used to provide access to data that does not map
+        to any Rosetta models instead of requiring an integrator to use some
+        network-specific SDK and call some network-specific endpoint (like surfacing
+        staking parameters).
+
+        Call is NOT a replacement for implementing Rosetta API endpoints or mapping
+        network-specific data to Rosetta models. Rather, it enables developers to build
+        additional Rosetta API interfaces for things they care about without introducing
+        complexity into a base-level Rosetta implementation. Simply put, imagine
+        that the average integrator will use layered Rosetta API implementations
+        that each surfaces unique data.
+      operationId: call 
+      tags:
+        - Call 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResponse'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     # Identifiers
@@ -1195,6 +1237,64 @@ components:
           $ref: '#/components/schemas/TransactionIdentifier'
         metadata:
           type: object
+    CallRequest:
+      description: |
+        CallRequest is the input to the `/call` endpoint.
+      type: object
+      required:
+        - network_identifier
+        - method
+        - parameters
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        method:
+          type: string
+          description: |
+            Method is some network-specific procedure call. This method could
+            map to a network-specific RPC endpoint, a method in an SDK generated
+            from a smart contract, or some hybrid of the two.
+
+            The implementation must define all available methods in the
+            Allow object. However, it is up to the caller to determine
+            which parameters to provide when invoking `/call`.
+          example: "eth_call"
+        parameters:
+          type: object
+          description: |
+            Parameters is some network-specific argument for a method. It is
+            up to the caller to determine which parameters to provide when invoking
+            `/call`.
+          example:
+            block_number: 23
+            address: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5"
+    CallResponse:
+      description: |
+        CallResponse contains the result of a `/call` invocation.
+      type: object
+      required:
+        - result
+        - idempotent
+      properties:
+        result:
+          type: object
+          description: |
+            Result contains the result of the `/call` invocation. This result
+            will not be inspected or interpreted by Rosetta tooling and is
+            left to the caller to decode.
+          example:
+            count: 1000
+        idempotent:
+          type: boolean
+          description: |
+            Idempotent indicates that if `/call` is invoked with the same
+            CallRequest again, at any point in time, it will return the same
+            CallResponse.
+
+            Integrators may cache the CallResponse if this is set to true
+            to avoid making unnecessary calls to the Rosetta implementation. For
+            this reason, implementers should be very conservative about returning
+            true here or they could cause issues for the caller.
 
     # Miscellaneous
     Error:

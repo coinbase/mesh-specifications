@@ -72,6 +72,12 @@ equals balance on node  |                                                       
       and incoming deposits        X                 v                                |
                                    X  Get a Specific Mempool Transaction +---------------------> /mempool/transaction
                                    X                                                  |
+                                                                                      |
+                                                                                      |
+                                   X                                                  |
+  Make arbitrary call to to access X  Make Arbitrary Procedure Call +--------------------------> /call
+  network-specific data            X                                                  |
+                                   X                                                  |
                                                                                       +
 ```
 
@@ -180,6 +186,32 @@ Any interface built on top of the Construction API could support the constructio
 of transactions on any blockchain that supports Rosetta with no modification.
 You could, for example, build a [WalletLink](https://www.walletlink.org/) service
 that worked with any blockchain.
+
+## Modules
+For blockchains with smart contracts, it is usually not possible to add high fidelity
+support for each deployed contract to the "core" Rosetta implementation. Accessing any
+contract often requires generating some SDK and making very contract-specific access
+decisions that can introduce significant complexity into the "core" implementation.
+
+So, no smart contract interaction in Rosetta? Think again!
+
+To empower developers to build Rosetta API implementations for a given smart contract
+on top of your "core" implementation, we recommend implementing the `/call` endpoint
+and providing support for common network-specific endpoints that would be used to
+read or modify contract state. In theory, you could stack any number of Rosetta API
+implementations on top of each other where each child implementation calls some
+set of primitives exposed in this `/call` endpoint.
+
+In the case of Ethereum, a group of developers could implement a core
+`rosetta-ethereum` implementation that provides the ability to track
+and create ETH transfers and another group of developers could write a
+`rosetta-erc20` that allows for tracking and creating ERC-20 token transfers
+using the `eth_call` method exposed by `rosetta-ethereum`. Another group of
+developers could write an implementation that tracks DEX trades, lending activity,
+or even validator performance. You can see an example of how this would work in
+this illustration:
+
+![Rosetta Modules](images/rosetta-modules.png)
 
 ## Documentation
 Now that you have some familiarity with the flow of operations, we recommend taking a look at the Rosetta API Docs:
