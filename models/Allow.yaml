@@ -71,7 +71,7 @@ properties:
     type: array
     description: |
       BalanceExemptions is an array of BalanceExemption indicating
-      which account could change without a corresponding Operation.
+      which account balances could change without a corresponding Operation.
 
       BalanceExemptions should be used sparingly as they may
       introduce significant complexity for integrators that attempt
