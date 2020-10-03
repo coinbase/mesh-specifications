@@ -1,19 +1,22 @@
 description: |
   BalanceExemption indicates that the balance for a particular account could
   change without a corresponding Operation. This typically occurs with staking
-  rewards, vesting accounts, and currencies with a dynamic supply.
+  rewards, vesting balances, and Currencies with a dynamic supply.
 
-  BalanceExemptions should be used extremely conservatively as they may
-  introduce significant complexity for integrators.
+  BalanceExemptions should be used sparingly as they may
+  introduce significant complexity for integrators that attempt
+  to reconcile all account balance changes.
 
-  If you rely on any BalanceExemptions, you MUST implement historical
-  balance lookup.
+  If your implementation relies on any BalanceExemptions, you MUST implement
+  historical balance lookup (the ability to query an account balance at any
+  BlockIdentifier).
 type: object
 properties:
   sub_account_address:
     description: |
-      # TODO: this should be sub account address so that we can cover 
-      # all subaccounts regardless of metadata
+      SubAccountAddress is the SubAccountIdentifier.Address that the
+      BalanceExemption applies to (regardless of the value of
+      SubAccountIdentifer.Metadata).
     type: string
     example: "staking"
   currency:

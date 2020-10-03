@@ -70,8 +70,15 @@ properties:
   balance_exemptions:
     type: array
     description: |
-      blah 
+      BalanceExemptions is an array of BalanceExemption indicating
+      which account could change without a corresponding Operation.
 
-      if exemptions provided, you MUST support historical balance lookup.
+      BalanceExemptions should be used sparingly as they may
+      introduce significant complexity for integrators that attempt
+      to reconcile all account balance changes.
+
+      If your implementation relies on any BalanceExemptions, you MUST implement
+      historical balance lookup (the ability to query an account balance at any
+      BlockIdentifier).
     items:
       $ref: 'BalanceExemption.yaml'
