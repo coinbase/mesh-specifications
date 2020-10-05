@@ -671,6 +671,10 @@ components:
       $ref: 'models/CoinChange.yaml'
     Coin:
       $ref: 'models/Coin.yaml'
+    BalanceExemption:
+      $ref: 'models/BalanceExemption.yaml'
+    ExemptionType:
+      $ref: 'models/ExemptionType.yaml'
 
     # Request/Responses
     AccountBalanceRequest:

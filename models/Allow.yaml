@@ -25,6 +25,7 @@ required:
   - errors
   - historical_balance_lookup
   - call_methods
+  - balance_exemptions
 properties:
   operation_statuses:
     description: |
@@ -66,3 +67,18 @@ properties:
     items:
       type: string
       example: "eth_call"
+  balance_exemptions:
+    type: array
+    description: |
+      BalanceExemptions is an array of BalanceExemption indicating
+      which account balances could change without a corresponding Operation.
+
+      BalanceExemptions should be used sparingly as they may
+      introduce significant complexity for integrators that attempt
+      to reconcile all account balance changes.
+
+      If your implementation relies on any BalanceExemptions, you MUST implement
+      historical balance lookup (the ability to query an account balance at any
+      BlockIdentifier).
+    items:
+      $ref: 'BalanceExemption.yaml'

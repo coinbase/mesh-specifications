@@ -1124,7 +1124,8 @@
          "operation_types",
          "errors",
          "historical_balance_lookup",
-         "call_methods"
+         "call_methods",
+         "balance_exemptions"
         ],
        "properties": {
          "operation_statuses": {
@@ -1159,6 +1160,13 @@
            "items": {
              "type":"string",
              "example":"eth_call"
+            }
+          },
+         "balance_exemptions": {
+           "type":"array",
+           "description":"BalanceExemptions is an array of BalanceExemption indicating which account balances could change without a corresponding Operation. BalanceExemptions should be used sparingly as they may introduce significant complexity for integrators that attempt to reconcile all account balance changes. If your implementation relies on any BalanceExemptions, you MUST implement historical balance lookup (the ability to query an account balance at any BlockIdentifier).",
+           "items": {
+             "$ref":"#/components/schemas/BalanceExemption"
             }
           }
         }
@@ -1329,6 +1337,32 @@
            "$ref":"#/components/schemas/Amount"
           }
         }
+      },
+     "BalanceExemption": {
+       "description":"BalanceExemption indicates that the balance for an exempt account could change without a corresponding Operation. This typically occurs with staking rewards, vesting balances, and Currencies with a dynamic supply. Currently, it is possible to exempt an account from strict reconciliation by SubAccountIdentifier.Address or by Currency. This means that any account with SubAccountIdentifier.Address would be exempt or any balance of a particular Currency would be exempt, respectively. BalanceExemptions should be used sparingly as they may introduce significant complexity for integrators that attempt to reconcile all account balance changes. If your implementation relies on any BalanceExemptions, you MUST implement historical balance lookup (the ability to query an account balance at any BlockIdentifier).",
+       "type":"object",
+       "properties": {
+         "sub_account_address": {
+           "description":"SubAccountAddress is the SubAccountIdentifier.Address that the BalanceExemption applies to (regardless of the value of SubAccountIdentifier.Metadata).",
+           "type":"string",
+           "example":"staking"
+          },
+         "currency": {
+           "$ref":"#/components/schemas/Currency"
+          },
+         "exemption_type": {
+           "$ref":"#/components/schemas/ExemptionType"
+          }
+        }
+      },
+     "ExemptionType": {
+       "description":"ExemptionType is used to indicate if the live balance for an account subject to a BalanceExemption could increase above, decrease below, or equal the computed balance. * greater_or_equal: The live balance may increase above or equal the computed balance. This typically   occurs with staking rewards that accrue on each block. * less_or_equal: The live balance may decrease below or equal the computed balance. This typically   occurs as balance moves from locked to spendable on a vesting account. * dynamic: The live balance may increase above, decrease below, or equal the computed balance. This   typically occurs with tokens that have a dynamic supply.",
+       "type":"string",
+       "enum": [
+         "greater_or_equal",
+         "less_or_equal",
+         "dynamic"
+        ]
       },
      "AccountBalanceRequest": {
        "description":"An AccountBalanceRequest is utilized to make a balance request on the /account/balance endpoint. If the block_identifier is populated, a historical balance query should be performed.",
