@@ -49,5 +49,5 @@ be locked to prevent further discussion.
 All support requests must be made via [our support team][3].
 
 [1]: https://github.com/coinbase/rosetta-specifications/issues
-[2]: https://medium.com/brigade-engineering/the-secrets-to-great-commit-messages-106fc0a92a25
+[2]: https://chris.beams.io/posts/git-commit/#seven-rules
 [3]: https://support.coinbase.com/customer/en/portal/articles/2288496-how-can-i-contact-coinbase-support-
