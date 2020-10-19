@@ -1,7 +1,7 @@
 {
  "openapi":"3.0.2",
  "info": {
-   "version":"1.4.5",
+   "version":"1.4.6",
    "title":"Rosetta",
    "description":"Build Once. Integrate Your Blockchain Everywhere.",
    "license": {
@@ -1153,6 +1153,12 @@
          "historical_balance_lookup": {
            "type":"boolean",
            "description":"Any Rosetta implementation that supports querying the balance of an account at any height in the past should set this to true."
+          },
+         "timestamp_start_index": {
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "description":"If populated, `timestamp_start_index` indicates the first block index where block timestamps are considered valid (i.e. all blocks less than `timestamp_start_index` could have invalid timestamps). This is useful when the genesis block (or blocks) of a network have timestamp 0. If not populated, block timestamps are assumed to be valid for all available blocks."
           },
          "call_methods": {
            "type":"array",
