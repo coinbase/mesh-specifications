@@ -222,48 +222,6 @@ Now that you have some familiarity with the flow of operations, we recommend tak
 
 If you have any questions, don't hesitate to reach out in our [community forum](https://community.rosetta-api.org).
 
-## CurveTypes and SignatureTypes
-The Construction API only supports detached, curve-based key generation and signing.
-In short, this means that Construction API implementations will never have
-access to private keys and will only ever interact with public keys and signatures
-in standardized formats. These formats are listed below:
-
-_CurveType and SignatureType are purposely decoupled as a curve could be used
-with multiple signature types (i.e. `secp256k1:ECDSA` and `secp256k1:Schnorr`)._
-
-### Supported CurveTypes
-* secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
-* secp256r1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
-* edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf)
-* tweedle: 1st pk : Fq.t (32 bytes) || 2nd pk : Fq.t (32 bytes) (https://github.com/CodaProtocol/coda/blob/develop/rfcs/0038-rosetta-construction-api.md#marshal-keys)
-
-### Supported SignatureTypes
-* ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes`
-* ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
-* ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
-* schnorr_1: `r (32-bytes) || s (32-bytes)` - `64 bytes`
-* schnorr_poseidon: `r (32-bytes) || s (32-bytes) where s = Hash(1st pk || 2nd pk || r)` - `64 bytes`
-
-`schnorr_1` is a EC-Schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first. Refer to [Zilliqa's Schnorr Library](https://github.com/Zilliqa/schnorr/blob/master/src/libSchnorr/src/Schnorr.cpp#L86) and [Zilliqa Technical Whitepaper - Appendix A: Schnorr Digital Signature](https://docs.zilliqa.com/whitepaper.pdf) for details.)
-
-`schnorr_poseidon` is an EC-schnorr signature with Poseidon hash function implemented by O(1) Labs where both `r` and `s` are scalars encoded as `32-bytes` little-endian values. Refer to [Coda's signer reference implementation](https://github.com/CodaProtocol/signer-reference/blob/master/schnorr.ml#L92)
-
-### Adding New CurveTypes or SignatureTypes
-Unlike the Data API where there are no global type constraints (ex: you
-can specify any operation type), the Construction API has a clearly
-enumerated list of supported curves and signatures. Each one of these
-items has a clearly specified format that all implementations should
-expect to receive.
-
-If a curve or signature you are employing is not enumerated in the specification,
-you will need to open a PR against the specification to add it along with the standard
-format it will be represented in.
-
-It is up to the caller of a Construction API implementation to implement key generation
-and signing for a particular CurveType:SignatureType. There is a `keys` package
-in rosetta-sdk-go that is commonly used by callers and anyone
-in the community can implement additional schemes there.
-
 ## Writing a Rosetta API Implementation
 If you've made it this far, you are interested in developing a Rosetta API implementation
 for a blockchain project you are working on. As mentioned in the Rosetta doumentation, there
@@ -307,6 +265,48 @@ so that other developers can use it (see the note on [SDKs in more languages](#s
 [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go) for an example of how to generate
 code from this specification.
 
+### CurveTypes and SignatureTypes
+The Construction API only supports detached, curve-based key generation and signing.
+In short, this means that Construction API implementations will never have
+access to private keys and will only ever interact with public keys and signatures
+in standardized formats. These formats are listed below:
+
+_CurveType and SignatureType are purposely decoupled as a curve could be used
+with multiple signature types (i.e. `secp256k1:ECDSA` and `secp256k1:Schnorr`)._
+
+#### Supported CurveTypes
+* secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
+* secp256r1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
+* edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf)
+* tweedle: 1st pk : Fq.t (32 bytes) || 2nd pk : Fq.t (32 bytes) (https://github.com/CodaProtocol/coda/blob/develop/rfcs/0038-rosetta-construction-api.md#marshal-keys)
+
+#### Supported SignatureTypes
+* ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes`
+* ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
+* ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
+* schnorr_1: `r (32-bytes) || s (32-bytes)` - `64 bytes`
+* schnorr_poseidon: `r (32-bytes) || s (32-bytes) where s = Hash(1st pk || 2nd pk || r)` - `64 bytes`
+
+`schnorr_1` is a EC-Schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first. Refer to [Zilliqa's Schnorr Library](https://github.com/Zilliqa/schnorr/blob/master/src/libSchnorr/src/Schnorr.cpp#L86) and [Zilliqa Technical Whitepaper - Appendix A: Schnorr Digital Signature](https://docs.zilliqa.com/whitepaper.pdf) for details.)
+
+`schnorr_poseidon` is an EC-schnorr signature with Poseidon hash function implemented by O(1) Labs where both `r` and `s` are scalars encoded as `32-bytes` little-endian values. Refer to [Coda's signer reference implementation](https://github.com/CodaProtocol/signer-reference/blob/master/schnorr.ml#L92)
+
+#### Adding New CurveTypes or SignatureTypes
+Unlike the Data API where there are no global type constraints (ex: you
+can specify any operation type), the Construction API has a clearly
+enumerated list of supported curves and signatures. Each one of these
+items has a clearly specified format that all implementations should
+expect to receive.
+
+If a curve or signature you are employing is not enumerated in the specification,
+you will need to open a PR against the specification to add it along with the standard
+format it will be represented in.
+
+It is up to the caller of a Construction API implementation to implement key generation
+and signing for a particular CurveType:SignatureType. There is a `keys` package
+in rosetta-sdk-go that is commonly used by callers and anyone
+in the community can implement additional schemes there.
+
 ### Deployment
 Although the Construction API is defined in the same interface as endpoints that
 are "online" (i.e. fetching a block with `/block`), it must be possible to deploy your Data API
@@ -334,8 +334,9 @@ endpoints (other than `/construction/metadata` and `/construction/submit`).
 
 ### Validating Your Implementation
 To validate your implementation, you'll need to run the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
-The `rosetta-cli` has a command called `check` that can be used to ensure your implementation
-adheres to the specifications in this repository and that it accurately represents balance changes.
+The `rosetta-cli` has a collection of "check" commands that are used to ensure your implementation adheres to the
+Rosetta API. `check:data` ensures your implementation meets Data API requirements
+and `check:construction` ensures your implementation meets Construction API requirements.
 
 You can view an extensive list of checks this tool performs [here](https://github.com/coinbase/rosetta-cli#correctness-checks).
 If you'd like to add more checks for correctness, feel free to [create an issue](https://github.com/coinbase/rosetta-cli/issues) listing
