@@ -222,8 +222,8 @@ Now that you have some familiarity with the flow of operations, we recommend tak
 
 If you have any questions, don't hesitate to reach out in our [community forum](https://community.rosetta-api.org).
 
-## Writing a Data API Implementation
-If you've made it this far, you are interested in developing a Rosetta Data API implementation
+## Writing a Rosetta API Implementation
+If you've made it this far, you are interested in developing a Rosetta API implementation
 for a blockchain project you are working on. As mentioned in the Rosetta doumentation, there
 is [no restriction on what language you choose to use for your implementation](https://www.rosetta-api.org/docs/no_gatekeepers.html#no-required-languages)
 and [no repository](https://www.rosetta-api.org/docs/no_gatekeepers.html#no-master-repository)
@@ -236,7 +236,16 @@ this section of the website for high-quality implementations they can use
 for integration (make sure your implementation meets the
 ["expectations" of any implementation](https://www.rosetta-api.org/docs/node_deployment.html)).
 
-### Using Golang
+### Reference Implementations
+For many developers, the best way to get started is to look at an example. For this reason,
+we developed a complete Rosetta API reference implementation for [Bitcoin](https://github.com/coinbase/rosetta-bitcoin)
+and [Ethereum](https://github.com/coinbase/rosetta-ethereum).
+
+_Developers of Bitcoin-like or Ethereum-like blockchains may find it easier to fork these reference implementations than
+to write an implementation from scratch._
+
+### Pick a Language
+#### Using Golang
 If you are comfortable with Golang, the easiest way to write a Rosetta Data API implementation
 is to use [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). This Golang project
 provides a [server package](https://github.com/coinbase/rosetta-sdk-go/tree/master/server) that
@@ -247,7 +256,7 @@ with pre-parsed requests (instead of in raw JSON).
 There is a simple [example](https://github.com/coinbase/rosetta-sdk-go/tree/master/examples/server) of
 how to write an implementation using this package in [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go).
 
-### Using Another Language
+#### Using Another Language
 If you plan to use a language other than Golang, you will need to either codegen
 a server (the [overview](#overview) mentions some tools that can help with this) or
 write one from scratch. If you do choose to write an implementation in another language,
@@ -256,17 +265,22 @@ so that other developers can use it (see the note on [SDKs in more languages](#s
 [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go) for an example of how to generate
 code from this specification.
 
-## Writing a Construction API Implementation
-In the near future, we will update this section with tips and helpful links for writing a
-Construction API implementation.
+### CurveTypes and SignatureTypes
+The Construction API only supports detached, curve-based key generation and signing.
+In short, this means that Construction API implementations will never have
+access to private keys and will only ever interact with public keys and signatures
+in standardized formats. These formats are listed below:
 
-### Supported CurveTypes
+_CurveType and SignatureType are purposely decoupled as a curve could be used
+with multiple signature types (i.e. `secp256k1:ECDSA` and `secp256k1:Schnorr`)._
+
+#### Supported CurveTypes
 * secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
 * secp256r1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3)
 * edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf)
 * tweedle: 1st pk : Fq.t (32 bytes) || 2nd pk : Fq.t (32 bytes) (https://github.com/CodaProtocol/coda/blob/develop/rfcs/0038-rosetta-construction-api.md#marshal-keys)
 
-### Supported SignatureTypes
+#### Supported SignatureTypes
 * ecdsa: `r (32-bytes) || s (32-bytes)` - `64 bytes`
 * ecdsa_recovery: `r (32-bytes) || s (32-bytes) || v (1-byte)` - `65 bytes`
 * ed25519: `R (32-byte) || s (32-bytes)` - `64 bytes`
@@ -277,11 +291,7 @@ Construction API implementation.
 
 `schnorr_poseidon` is an EC-schnorr signature with Poseidon hash function implemented by O(1) Labs where both `r` and `s` are scalars encoded as `32-bytes` little-endian values. Refer to [Coda's signer reference implementation](https://github.com/CodaProtocol/signer-reference/blob/master/schnorr.ml#L92)
 
-### Decoupled Signature Schemes
-CurveType and SignatureType are purposely decoupled as a curve could be used
-with multiple signature types (i.e. `secp256k1:ECDSA` and `secp256k1:Schnorr`).
-
-### Adding New CurveTypes or SignatureTypes
+#### Adding New CurveTypes or SignatureTypes
 Unlike the Data API where there are no global type constraints (ex: you
 can specify any operation type), the Construction API has a clearly
 enumerated list of supported curves and signatures. Each one of these
@@ -297,7 +307,7 @@ and signing for a particular CurveType:SignatureType. There is a `keys` package
 in rosetta-sdk-go that is commonly used by callers and anyone
 in the community can implement additional schemes there.
 
-## Deployment
+### Deployment
 Although the Construction API is defined in the same interface as endpoints that
 are "online" (i.e. fetching a block with `/block`), it must be possible to deploy your Data API
 and Construction API separately. This does not mean implementations need to live
@@ -305,7 +315,7 @@ in separate repositories or even be defined in separate Dockerfiles. However, it
 to start an "offline-only" version of your implementation that supports all Construction API
 endpoints (other than `/construction/metadata` and `/construction/submit`).
 
-### Online Mode Endpoints
+#### Online Mode Endpoints
 * `/network/*`
 * `/block/*`
 * `/account/*`
@@ -314,7 +324,7 @@ endpoints (other than `/construction/metadata` and `/construction/submit`).
 * `/construction/metadata`
 * `/construction/submit`
 
-### Offline Mode Endpoints
+#### Offline Mode Endpoints
 * `/construction/derive`
 * `/construction/preprocess`
 * `/construction/payloads`
@@ -322,10 +332,11 @@ endpoints (other than `/construction/metadata` and `/construction/submit`).
 * `/construction/parse`
 * `/construction/hash`
 
-## Validating Your Implementation
+### Validating Your Implementation
 To validate your implementation, you'll need to run the [rosetta-cli](https://github.com/coinbase/rosetta-cli).
-The `rosetta-cli` has a command called `check` that can be used to ensure your implementation
-adheres to the specifications in this repository and that it accurately represents balance changes.
+The `rosetta-cli` has a collection of "check" commands that are used to ensure your implementation adheres to the
+Rosetta API. `check:data` ensures your implementation meets Data API requirements
+and `check:construction` ensures your implementation meets Construction API requirements.
 
 You can view an extensive list of checks this tool performs [here](https://github.com/coinbase/rosetta-cli#correctness-checks).
 If you'd like to add more checks for correctness, feel free to [create an issue](https://github.com/coinbase/rosetta-cli/issues) listing
@@ -333,8 +344,8 @@ in detail what you think should be checked in any implementation.
 
 ## Writing an Integration
 Before starting your own integration, we recommend reading this
-[blog post](https://www.rosetta-api.org/blog/2020/06/17/1-try-celo-rosetta.html) that
-walks through how to fetch blocks from a Celo Rosetta API implementation.
+[blog post](https://community.rosetta-api.org/t/introducing-rosetta-ethereum-coinbases-ethereum-implementation-of-the-rosetta-api) that
+walks through how to fetch blocks from a Ethereum Rosetta API implementation.
 
 The most developed tools for working with Rosetta API implementations can
 be found in [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go). Below,
