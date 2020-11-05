@@ -653,6 +653,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /events/blocks:
+    post:
+      summary: blah blah
+      description: |
+      operationId: eventsBlocks
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventsBlocksRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsBlocksResponse'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /search/transactions:
+    post:
+      summary: blah blah
+      description: |
+      operationId: searchTransactions
+      tags:
+        - Search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchTransactionsRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTransactionsResponse'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     # Identifiers
