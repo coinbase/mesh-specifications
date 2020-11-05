@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.6
+  version: 1.4.7
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
