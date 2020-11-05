@@ -309,7 +309,9 @@ paths:
         Get an array of all unspent coins for an AccountIdentifier and the
         BlockIdentifier at which the lookup was performed. If your implementation
         does not support coins (i.e. it is for an account-based blockchain),
-        you do not need to implement this endpoint.
+        you do not need to implement this endpoint. If you implementation does
+        support coins (i.e. it is fro a UTXO-based blockchain), you MUST
+        also complete the `/account/balance` endpoint.
 
         It is important to note that making a coins request for an account
         without populating the SubAccountIdentifier should not result in the
