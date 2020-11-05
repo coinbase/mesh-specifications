@@ -770,6 +770,10 @@ components:
       $ref: 'models/BalanceExemption.yaml'
     ExemptionType:
       $ref: 'models/ExemptionType.yaml'
+    BlockEventType:
+      $ref: 'models/BlockEventType.yaml'
+    BlockEvent:
+      $ref: 'models/BlockEvent.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -1455,6 +1459,44 @@ components:
             to avoid making unnecessary calls to the Rosetta implementation. For
             this reason, implementers should be very conservative about returning
             true here or they could cause issues for the caller.
+    EventsBlocksRequest:
+      description: |
+      type: object
+      required:
+        - network_identifier
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        offset:
+          description: |
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+        limit:
+          description: |
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+    EventsBlocksResponse:
+      description: |
+      type: object
+      required:
+        - max_sequence
+        - events
+      properties:
+        max_sequence:
+          description: |
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+        events:
+          type: array
+          description: |
+          items:
+            $ref: '#/components/schemas/BlockEvent'
 
     # Miscellaneous
     Error:
