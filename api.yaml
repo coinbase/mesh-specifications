@@ -770,10 +770,10 @@ components:
       $ref: 'models/BalanceExemption.yaml'
     ExemptionType:
       $ref: 'models/ExemptionType.yaml'
-    BlockEventType:
-      $ref: 'models/BlockEventType.yaml'
     BlockEvent:
       $ref: 'models/BlockEvent.yaml'
+    BlockEventType:
+      $ref: 'models/BlockEventType.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -1461,6 +1461,7 @@ components:
             true here or they could cause issues for the caller.
     EventsBlocksRequest:
       description: |
+        EventsBlocksRequest 
       type: object
       required:
         - network_identifier
@@ -1469,18 +1470,26 @@ components:
           $ref: '#/components/schemas/NetworkIdentifier'
         offset:
           description: |
+            offset is the offset into the event stream to sync events from. If this
+            is left empty, we stream the limit from tip. If this is set to 0,
+            we start from the beginning.
           type: integer
           format: int64
           minimum: 0
           example: 5
         limit:
           description: |
+            limit is the maximum number of events to fetch in one call. The implementation
+            may return up to this limit but there is no guarantee it will return all limit
+            events.
           type: integer
           format: int64
           minimum: 0
           example: 5
     EventsBlocksResponse:
       description: |
+        EventsBlocksResponse contains an ordered collection of BlockEvents
+        and the largest available retrievable sequence.
       type: object
       required:
         - max_sequence
@@ -1488,6 +1497,7 @@ components:
       properties:
         max_sequence:
           description: |
+            max_sequence is the maximum available sequence number to fetch.
           type: integer
           format: int64
           minimum: 0
@@ -1495,6 +1505,10 @@ components:
         events:
           type: array
           description: |
+            events is an array of BlockEvents indicating the order to add
+            and remove blocks to maintain a consistent view of blockchain
+            state. Following this event stream prevents some lightweight
+            clients from running their own syncer.
           items:
             $ref: '#/components/schemas/BlockEvent'
 
