@@ -307,7 +307,9 @@ paths:
       summary: Get an Account's Unspent Coins
       description: |
         Get an array of all unspent coins for an AccountIdentifier and the
-        BlockIdentifier at which the lookup was performed.
+        BlockIdentifier at which the lookup was performed. If your implementation
+        does not support coins (i.e. it is for an account-based blockchain),
+        you do not need to implement this endpoint.
 
         It is important to note that making a coins request for an account
         without populating the SubAccountIdentifier should not result in the
