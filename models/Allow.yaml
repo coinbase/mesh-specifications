@@ -26,6 +26,7 @@ required:
   - historical_balance_lookup
   - call_methods
   - balance_exemptions
+  - mempool_coins
 properties:
   operation_statuses:
     description: |
@@ -95,3 +96,10 @@ properties:
       BlockIdentifier).
     items:
       $ref: 'BalanceExemption.yaml'
+  mempool_coins:
+    type: boolean
+    description: |
+      Any Rosetta implementation that can update an AccountIdentifier's unspent
+      coins based on the contents of the mempool should populate this field
+      as true. If false, requests to `/account/coins` that set `include_mempool`
+      as true will be automatically rejected.

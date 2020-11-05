@@ -261,7 +261,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /account/balance:
     post:
-      summary: Get an Account Balance
+      summary: Get an Account's Balance
       description: |
         Get an array of all AccountBalances for an AccountIdentifier and the
         BlockIdentifier at which the balance lookup was performed. The BlockIdentifier
@@ -296,6 +296,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountBalanceResponse'
+        '500':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /account/coins:
+    post:
+      summary: Get an Account's Unspent Coins
+      description: |
+        Get an array of all unspent coins for an AccountIdentifier and the
+        BlockIdentifier at which the lookup was performed. If your implementation
+        does not support coins (i.e. it is for an account-based blockchain),
+        you do not need to implement this endpoint. If you implementation does
+        support coins (i.e. it is fro a UTXO-based blockchain), you MUST
+        also complete the `/account/balance` endpoint.
+
+        It is important to note that making a coins request for an account
+        without populating the SubAccountIdentifier should not result in the
+        coins of all possible SubAccountIdentifiers being returned. Rather,
+        it should result in the coins pertaining to no SubAccountIdentifiers
+        being returned. To get all coins associated with an account, it may be
+        necessary to perform multiple coin requests with unique AccountIdentifiers.
+
+        Optionally, an implementation may choose to support updating an AccountIdentifier's
+        unspent coins based on the contents of the mempool. Note, using this functionality
+        breaks any guarantee of idempotency.
+      operationId: accountCoins
+      tags:
+        - Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountCoinsRequest'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountCoinsResponse'
         '500':
           description: unexpected error
           content:
@@ -699,6 +742,8 @@ components:
         If an account has a balance for each AccountIdentifier describing it
         (ex: an ERC-20 token balance on a few smart contracts), an account
         balance request must be made with each AccountIdentifier.
+
+        The `coins` field was removed and replaced by by `/account/coins` in `v1.4.7`.
       type: object
       required:
         - block_identifier
@@ -712,6 +757,45 @@ components:
             A single account may have a balance in multiple currencies.
           items:
             $ref: '#/components/schemas/Amount'
+        metadata:
+          description: |
+            Account-based blockchains that utilize a nonce or sequence number
+            should include that number in the metadata. This number could be
+            unique to the identifier or global across the account address.
+          type: object
+          example:
+            sequence_number: 23
+    AccountCoinsRequest:
+      description: |
+        AccountCoinsRequest is utilized to make a request on the /account/coins
+        endpoint.
+      type: object
+      required:
+        - network_identifier
+        - account_identifier
+        - include_mempool
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        account_identifier:
+          $ref: '#/components/schemas/AccountIdentifier'
+        include_mempool:
+          type: boolean
+          description: |
+            Include state from the mempool when looking up an account's
+            unspent coins. Note, using this functionality
+            breaks any guarantee of idempotency.
+    AccountCoinsResponse:
+      description: |
+        AccountCoinsResponse is returned on the /account/coins endpoint and includes
+        all unspent Coins owned by an AccountIdentifier.
+      type: object
+      required:
+        - block_identifier
+        - coins
+      properties:
+        block_identifier:
+          $ref: '#/components/schemas/BlockIdentifier'
         coins:
           type: array
           description: |
