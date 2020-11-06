@@ -227,7 +227,14 @@ to write a generic indexer for any Rosetta implementation.
 To avoid a proliferation of interfaces that service Rosetta in this layer,
 we've defined a set of standard "indexer" endpoints that enable developers
 to automatically integrate (with the SDK they already use to access the
-Rosetta API).
+Rosetta API). **Rosetta implementations are not required to implement "indexer" endpoints
+but are welcome to do so!**
+
+Indexer implementations must proxy non-indexer Data API and
+Construction API calls to the implementation of interest (potentially
+caching some data) so that developers do not need to connect to multiple
+endpoints to access Rosetta. All calls contain a `NetworkIdentifier` so it
+should be possible to route requests without too much difficulty.
 
 ### Required Endpoints
 * Data API (proxied)
@@ -237,15 +244,6 @@ Rosetta API).
 
 _If you think an endpoint is missing from this list, please reach out
 on our [community](https://community.rosetta-api.org/)._
-
-Indexer implementations must proxy non-indexer Data API and
-Construction API calls to the implementation of interest (potentially
-caching some data) so that developers do not need to connect to multiple
-endpoints to access Rosetta. All calls contain a `NetworkIdentifier` so it
-should be possible to route requests without too much difficulty.
-
-**Rosetta implementations do not need to implement "indexer" endpoints
-but are welcome to do so!**
 
 ## Documentation
 Now that you have some familiarity with the flow of operations, we recommend taking a look at the Rosetta API Docs:
