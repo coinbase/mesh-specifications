@@ -13,6 +13,8 @@
 # limitations under the License.
 
 description: |
+  BlockEventType determines if a BlockEvent represents the
+  addition or removal of a block.
 type: string
 enum:
   - block_added

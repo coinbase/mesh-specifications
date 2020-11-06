@@ -13,12 +13,24 @@
 # limitations under the License.
 
 description: |
+  BlockEvent represents the addition or removal of a BlockIdentifier
+  from the stored state of an indexer. Streaming BlockEvents allows
+  lightweight clients to update their own state without needing to
+  implement their own syncing logic.
 type: object
 required:
   - sequence
   - block_identifier 
   - type 
 properties:
+  sequence:
+    description: |
+      sequence is the unique identifier of a BlockEvent
+      within the context of a NetworkIdentifier.
+    type: integer
+    format: int64
+    minimum: 0
+    example: 5
   block_identifier:
     $ref: 'BlockIdentifier.yaml'
   type:
