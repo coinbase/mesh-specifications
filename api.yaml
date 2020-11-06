@@ -1586,6 +1586,8 @@ components:
           $ref: '#/components/schemas/TransactionIdentifier'
         account_identifier:
           $ref: '#/components/schemas/AccountIdentifier'
+        coin_identifier:
+          $ref: '#/components/schemas/CoinIdentifier'
         currency:
           $ref: '#/components/schemas/Currency'
         status:
