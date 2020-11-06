@@ -1539,7 +1539,7 @@ components:
     SearchTransactionsRequest:
       description: |
         SearchTransactionsRequest is used to search for transactions
-        matching a set of provided conditions.
+        matching a set of provided conditions in canonical blocks.
       type: object
       required:
         - network_identifier
@@ -1554,6 +1554,20 @@ components:
             max_block is the largest block index to consider when searching
             for transactions. If this field is not populated, the current
             block is considered the max_block.
+
+            If you do not specify a max_block, it is possible a newly synced
+            block will interfere with paginated transaction queries (as the offset
+            could become invalid with newly added rows).
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+        offset:
+          description: |
+            offset is the offset into the query result to start returning transactions.
+
+            If any search conditions are changed, the query offset will change and you
+            must restart your search iteration.
           type: integer
           format: int64
           minimum: 0
@@ -1562,10 +1576,6 @@ components:
           description: |
             limit is the maximum number of transactions to return in one call. The implementation
             may return <= limit transactions.
-
-            If returning all transactions in a block would surpass the specified
-            limit (so that only some transactions in a block would be returned),
-            no transactions from that block are returned.
           type: integer
           format: int64
           minimum: 0
@@ -1607,10 +1617,11 @@ components:
       required:
         - transactions
       properties:
-        next_max_block:
+        next_offset:
           description: |
-            next_max_block is the next max_block to use when querying transactions.
-            If there are no more transactions to fetch, this field is not returned.
+            next_offset is the next offset to use when paginating through
+            transaction results. If this field is not populated, there are
+            no more transactions to query.
           type: integer
           format: int64
           minimum: 0
