@@ -213,6 +213,38 @@ this illustration:
 
 ![Rosetta Modules](images/rosetta-modules.png)
 
+## Indexers
+For some developers, the existing Data API and Construction API endpoints are not
+sufficient to fully support an asset integration. It is not possible, for example,
+to search for a transaction by hash or access all transactions that affected
+a particular account. Traditionally database-intensive functionality was purposely
+excluded from the collection of endpoints any Rosetta implementation must complete
+as to avoid imposing cumbersome requirements on Rosetta implementers (that could require
+maintaining architecture alongside their core node).
+
+Because of the standardization introduced by Rosetta, it is possible
+to write a generic indexer for any Rosetta implementation.
+To avoid a proliferation of interfaces that service Rosetta in this layer,
+we've defined a set of standard "indexer" endpoints that enable developers
+to automatically integrate (with the SDK they already use to access the
+Rosetta API). **Rosetta implementations are not required to implement "indexer" endpoints
+but are welcome to do so!**
+
+Indexer implementations must proxy non-indexer Data API and
+Construction API calls to the implementation of interest (potentially
+caching some data) so that developers do not need to connect to multiple
+endpoints to access Rosetta. All calls contain a `NetworkIdentifier` so it
+should be possible to route requests without too much difficulty.
+
+### Required Endpoints
+* Data API (proxied)
+* Construction API (proxied)
+* `/events/*`
+* `/search/*`
+
+_If you think an endpoint is missing from this list, please reach out
+on our [community](https://community.rosetta-api.org/)._
+
 ## Documentation
 Now that you have some familiarity with the flow of operations, we recommend taking a look at the Rosetta API Docs:
 
@@ -325,6 +357,8 @@ endpoints (other than `/construction/metadata` and `/construction/submit`).
 * `/construction/submit`
 
 #### Offline Mode Endpoints
+* `/network/list`
+* `/network/options`
 * `/construction/derive`
 * `/construction/preprocess`
 * `/construction/payloads`
