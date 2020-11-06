@@ -215,7 +215,7 @@ this illustration:
 
 ## Indexers
 For some developers, the existing Data API and Construction API endpoints are not
-sufficent to fully support an asset integration. It is not possible, for example,
+sufficient to fully support an asset integration. It is not possible, for example,
 to search for a transaction by hash or access all transactions that affected
 a particular account. Traditionally database-intensive functionality was purposely
 excluded from the collection of endpoints any Rosetta implementation must complete
