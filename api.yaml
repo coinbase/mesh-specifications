@@ -795,6 +795,10 @@ components:
       $ref: 'models/BlockEvent.yaml'
     BlockEventType:
       $ref: 'models/BlockEventType.yaml'
+    Operator:
+      $ref: 'models/Operator.yaml'
+    BlockTransaction:
+      $ref: 'models/BlockTransaction.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
@@ -1532,6 +1536,97 @@ components:
             state without implementing their own block syncing logic.
           items:
             $ref: '#/components/schemas/BlockEvent'
+    SearchTransactionsRequest:
+      description: |
+        SearchTransactionsRequest is used to search for transactions
+        matching a set of provided conditions.
+      type: object
+      required:
+        - network_identifier
+        - operator
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        operator:
+          $ref: '#/components/schemas/Operator'
+        max_block:
+          description: |
+            max_block is the largest block index to consider when searching
+            for transactions. If this field is not populated, the current
+            block is considered the max_block.
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+        limit:
+          description: |
+            limit is the maximum number of transactions to return in one call. The implementation
+            may return <= limit transactions.
+
+            If returning all transactions in a block would surpass the specified
+            limit (so that only some transactions in a block would be returned),
+            no transactions from that block are returned.
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+        transaction_identifier:
+          $ref: '#/components/schemas/TransactionIdentifier'
+        account_identifier:
+          $ref: '#/components/schemas/AccountIdentifier'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        status:
+          type: string
+          description: |
+            status is the network-specific operation type.
+          example: "reverted"
+        type:
+          type: string
+          description: |
+            type is the network-specific operation type.
+          example: "transfer"
+        address:
+          type: string
+          description: |
+            address is AccountIdentifier.Address. This is used to get all
+            transactions related to an AccountIdentifier.Address, regardless
+            of SubAccountIdentifier.
+          example: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"
+        success:
+          type: boolean
+          description: |
+            success is a synthetic condition populated by parsing network-specific
+            operation statuses (using the mapping provided in `/network/options`).
+    SearchTransactionsResponse:
+      description: |
+        SearchTransactionsResponse contains an ordered collection of BlockTransactions
+        that match the query in SearchTransactionsRequest. These BlockTransactions
+        are sorted from most recent block to oldest block.
+      type: object
+      required:
+        - transactions
+      properties:
+        next_max_block:
+          description: |
+            next_max_block is the next max_block to use when querying transactions.
+            If there are no more transactions to fetch, this field is not returned.
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+        transactions:
+          type: array
+          description: |
+            transactions is an array of BlockTransactions sorted by most recent
+            BlockIdentifier (meaning that transactions in recent blocks appear
+            first).
+
+            If there are many transactions for a particular search, transactions
+            may not contain all matching transactions. It is up to the caller to
+            paginate these transactions using the max_block field.
+          items:
+            $ref: 'BlockTransaction.yaml'
 
     # Miscellaneous
     Error:
