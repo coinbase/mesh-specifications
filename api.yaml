@@ -658,10 +658,10 @@ paths:
       summary: |
         [INDEXER] Get a range of BlockEvents
       description: |
-        `/events/blocks` allows the caller to query a stream
+        `/events/blocks` allows the caller to query a sequence
         of BlockEvents indicating which blocks were added and
-        removed from storage to reach the indexer's current state.
-        Streaming BlockEvents allows lightweight clients to update
+        removed from storage to reach the current state.
+        Following BlockEvents allows lightweight clients to update
         their state without needing to implement their own syncing
         logic (like finding the common parent in a reorg).
 
@@ -1489,7 +1489,8 @@ components:
     EventsBlocksRequest:
       description: |
         EventsBlocksRequest is utilized to fetch a sequence of BlockEvents
-        indicating which blocks were added and removed during syncing.
+        indicating which blocks were added and removed from storage to
+        reach the current state.
       type: object
       required:
         - network_identifier
@@ -1499,8 +1500,8 @@ components:
         offset:
           description: |
             offset is the offset into the event stream to sync events from. If this
-            is left empty, we stream the limit from tip. If this is set to 0,
-            we start from the beginning.
+            field is not populated, we return the limit events backwards from tip.
+            If this is set to 0, we start from the beginning.
           type: integer
           format: int64
           minimum: 0

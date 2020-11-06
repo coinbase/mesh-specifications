@@ -14,9 +14,8 @@
 
 description: |
   BlockEvent represents the addition or removal of a BlockIdentifier
-  from the stored state of an indexer. Streaming BlockEvents allows
-  lightweight clients to update their own state without needing to
-  implement their own syncing logic.
+  from storage. Streaming BlockEvents allows lightweight clients to
+  update their own state without needing to implement their own syncing logic.
 type: object
 required:
   - sequence

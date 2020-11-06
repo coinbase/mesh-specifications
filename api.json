@@ -769,7 +769,7 @@
    "/events/blocks": {
      "post": {
        "summary":"[INDEXER] Get a range of BlockEvents",
-       "description":"`/events/blocks` allows the caller to query a stream of BlockEvents indicating which blocks were added and removed from storage to reach the indexer's current state. Streaming BlockEvents allows lightweight clients to update their state without needing to implement their own syncing logic (like finding the common parent in a reorg). `/events/blocks` is considered an \"indexer\" endpoint and Rosetta implementations are not required to complete it to adhere to the Rosetta spec. However, any Rosetta \"indexer\" MUST support this endpoint.",
+       "description":"`/events/blocks` allows the caller to query a sequence of BlockEvents indicating which blocks were added and removed from storage to reach the current state. Following BlockEvents allows lightweight clients to update their state without needing to implement their own syncing logic (like finding the common parent in a reorg). `/events/blocks` is considered an \"indexer\" endpoint and Rosetta implementations are not required to complete it to adhere to the Rosetta spec. However, any Rosetta \"indexer\" MUST support this endpoint.",
        "operationId":"eventsBlocks",
        "tags": [
          "Events"
@@ -1501,7 +1501,7 @@
         ]
       },
      "BlockEvent": {
-       "description":"BlockEvent represents the addition or removal of a BlockIdentifier from the stored state of an indexer. Streaming BlockEvents allows lightweight clients to update their own state without needing to implement their own syncing logic.",
+       "description":"BlockEvent represents the addition or removal of a BlockIdentifier from storage. Streaming BlockEvents allows lightweight clients to update their own state without needing to implement their own syncing logic.",
        "type":"object",
        "required": [
          "sequence",
@@ -2225,7 +2225,7 @@
         }
       },
      "EventsBlocksRequest": {
-       "description":"EventsBlocksRequest is utilized to fetch a sequence of BlockEvents indicating which blocks were added and removed during syncing.",
+       "description":"EventsBlocksRequest is utilized to fetch a sequence of BlockEvents indicating which blocks were added and removed from storage to reach the current state.",
        "type":"object",
        "required": [
          "network_identifier"
@@ -2235,7 +2235,7 @@
            "$ref":"#/components/schemas/NetworkIdentifier"
           },
          "offset": {
-           "description":"offset is the offset into the event stream to sync events from. If this is left empty, we stream the limit from tip. If this is set to 0, we start from the beginning.",
+           "description":"offset is the offset into the event stream to sync events from. If this field is not populated, we return the limit events backwards from tip. If this is set to 0, we start from the beginning.",
            "type":"integer",
            "format":"int64",
            "minimum": 0,
