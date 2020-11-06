@@ -655,7 +655,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /events/blocks:
     post:
-      summary: [INDEXER] Get a range of BlockEvents
+      summary: |
+        [INDEXER] Get a range of BlockEvents
       description: |
         `/events/blocks` allows the caller to query a stream
         of BlockEvents indicating which blocks were added and
@@ -692,7 +693,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /search/transactions:
     post:
-      summary: [INDEXER] Search for Transactions
+      summary: |
+        [INDEXER] Search for Transactions
       description: |
         `/search/transactions` allows the caller to search for
         transactions that meet certain conditions. Some conditions
@@ -1637,7 +1639,7 @@ components:
             may not contain all matching transactions. It is up to the caller to
             paginate these transactions using the max_block field.
           items:
-            $ref: 'BlockTransaction.yaml'
+            $ref: '#/components/schemas/BlockTransaction'
 
     # Miscellaneous
     Error:

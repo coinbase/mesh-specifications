@@ -765,6 +765,90 @@
           }
         }
       }
+    },
+   "/events/blocks": {
+     "post": {
+       "summary":"[INDEXER] Get a range of BlockEvents",
+       "description":"`/events/blocks` allows the caller to query a stream of BlockEvents indicating which blocks were added and removed from storage to reach the indexer's current state. Streaming BlockEvents allows lightweight clients to update their state without needing to implement their own syncing logic (like finding the common parent in a reorg). `/events/blocks` is considered an \"indexer\" endpoint and Rosetta implementations are not required to complete it to adhere to the Rosetta spec. However, any Rosetta \"indexer\" MUST support this endpoint.",
+       "operationId":"eventsBlocks",
+       "tags": [
+         "Events"
+        ],
+       "requestBody": {
+         "required": true,
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref":"#/components/schemas/EventsBlocksRequest"
+              }
+            }
+          }
+        },
+       "responses": {
+         "200": {
+           "description":"Expected response to a valid request",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/EventsBlocksResponse"
+                }
+              }
+            }
+          },
+         "500": {
+           "description":"unexpected error",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+   "/search/transactions": {
+     "post": {
+       "summary":"[INDEXER] Search for Transactions",
+       "description":"`/search/transactions` allows the caller to search for transactions that meet certain conditions. Some conditions include matching a transaction hash, containing an operation with a certain status, or containing an operation that affects a certain account. `/search/transactions` is considered an \"indexer\" endpoint and Rosetta implementations are not required to complete it to adhere to the Rosetta spec. However, any Rosetta \"indexer\" MUST support this endpoint.",
+       "operationId":"searchTransactions",
+       "tags": [
+         "Search"
+        ],
+       "requestBody": {
+         "required": true,
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref":"#/components/schemas/SearchTransactionsRequest"
+              }
+            }
+          }
+        },
+       "responses": {
+         "200": {
+           "description":"Expected response to a valid request",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/SearchTransactionsResponse"
+                }
+              }
+            }
+          },
+         "500": {
+           "description":"unexpected error",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
  "components": {
@@ -1415,6 +1499,62 @@
          "less_or_equal",
          "dynamic"
         ]
+      },
+     "BlockEvent": {
+       "description":"BlockEvent represents the addition or removal of a BlockIdentifier from the stored state of an indexer. Streaming BlockEvents allows lightweight clients to update their own state without needing to implement their own syncing logic.",
+       "type":"object",
+       "required": [
+         "sequence",
+         "block_identifier",
+         "type"
+        ],
+       "properties": {
+         "sequence": {
+           "description":"sequence is the unique identifier of a BlockEvent within the context of a NetworkIdentifier.",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          },
+         "block_identifier": {
+           "$ref":"#/components/schemas/BlockIdentifier"
+          },
+         "type": {
+           "$ref":"#/components/schemas/BlockEventType"
+          }
+        }
+      },
+     "BlockEventType": {
+       "description":"BlockEventType determines if a BlockEvent represents the addition or removal of a block.",
+       "type":"string",
+       "enum": [
+         "block_added",
+         "block_removed"
+        ]
+      },
+     "Operator": {
+       "description":"Operator is used by query-related endpoints to determine how to apply conditions.",
+       "type":"string",
+       "enum": [
+         "or",
+         "and"
+        ]
+      },
+     "BlockTransaction": {
+       "description":"BlockTransaction contains a populated Transaction and the BlockIdentifier that contains it.",
+       "type":"object",
+       "required": [
+         "block_identifier",
+         "transaction"
+        ],
+       "properties": {
+         "block_identifier": {
+           "$ref":"#/components/schemas/BlockIdentifier"
+          },
+         "transaction": {
+           "$ref":"#/components/schemas/Transaction"
+          }
+        }
       },
      "AccountBalanceRequest": {
        "description":"An AccountBalanceRequest is utilized to make a balance request on the /account/balance endpoint. If the block_identifier is populated, a historical balance query should be performed.",
@@ -2081,6 +2221,144 @@
          "idempotent": {
            "type":"boolean",
            "description":"Idempotent indicates that if `/call` is invoked with the same CallRequest again, at any point in time, it will return the same CallResponse. Integrators may cache the CallResponse if this is set to true to avoid making unnecessary calls to the Rosetta implementation. For this reason, implementers should be very conservative about returning true here or they could cause issues for the caller."
+          }
+        }
+      },
+     "EventsBlocksRequest": {
+       "description":"EventsBlocksRequest is utilized to fetch a sequence of BlockEvents indicating which blocks were added and removed during syncing.",
+       "type":"object",
+       "required": [
+         "network_identifier"
+        ],
+       "properties": {
+         "network_identifier": {
+           "$ref":"#/components/schemas/NetworkIdentifier"
+          },
+         "offset": {
+           "description":"offset is the offset into the event stream to sync events from. If this is left empty, we stream the limit from tip. If this is set to 0, we start from the beginning.",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          },
+         "limit": {
+           "description":"limit is the maximum number of events to fetch in one call. The implementation may return <= limit events.",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          }
+        }
+      },
+     "EventsBlocksResponse": {
+       "description":"EventsBlocksResponse contains an ordered collection of BlockEvents and the max retrievable sequence.",
+       "type":"object",
+       "required": [
+         "max_sequence",
+         "events"
+        ],
+       "properties": {
+         "max_sequence": {
+           "description":"max_sequence is the maximum available sequence number to fetch.",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          },
+         "events": {
+           "type":"array",
+           "description":"events is an array of BlockEvents indicating the order to add and remove blocks to maintain a canonical view of blockchain state. Lightweight clients can use this event stream to update state without implementing their own block syncing logic.",
+           "items": {
+             "$ref":"#/components/schemas/BlockEvent"
+            }
+          }
+        }
+      },
+     "SearchTransactionsRequest": {
+       "description":"SearchTransactionsRequest is used to search for transactions matching a set of provided conditions in canonical blocks.",
+       "type":"object",
+       "required": [
+         "network_identifier",
+         "operator"
+        ],
+       "properties": {
+         "network_identifier": {
+           "$ref":"#/components/schemas/NetworkIdentifier"
+          },
+         "operator": {
+           "$ref":"#/components/schemas/Operator"
+          },
+         "max_block": {
+           "description":"max_block is the largest block index to consider when searching for transactions. If this field is not populated, the current block is considered the max_block. If you do not specify a max_block, it is possible a newly synced block will interfere with paginated transaction queries (as the offset could become invalid with newly added rows).",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          },
+         "offset": {
+           "description":"offset is the offset into the query result to start returning transactions. If any search conditions are changed, the query offset will change and you must restart your search iteration.",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          },
+         "limit": {
+           "description":"limit is the maximum number of transactions to return in one call. The implementation may return <= limit transactions.",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          },
+         "transaction_identifier": {
+           "$ref":"#/components/schemas/TransactionIdentifier"
+          },
+         "account_identifier": {
+           "$ref":"#/components/schemas/AccountIdentifier"
+          },
+         "currency": {
+           "$ref":"#/components/schemas/Currency"
+          },
+         "status": {
+           "type":"string",
+           "description":"status is the network-specific operation type.",
+           "example":"reverted"
+          },
+         "type": {
+           "type":"string",
+           "description":"type is the network-specific operation type.",
+           "example":"transfer"
+          },
+         "address": {
+           "type":"string",
+           "description":"address is AccountIdentifier.Address. This is used to get all transactions related to an AccountIdentifier.Address, regardless of SubAccountIdentifier.",
+           "example":"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"
+          },
+         "success": {
+           "type":"boolean",
+           "description":"success is a synthetic condition populated by parsing network-specific operation statuses (using the mapping provided in `/network/options`)."
+          }
+        }
+      },
+     "SearchTransactionsResponse": {
+       "description":"SearchTransactionsResponse contains an ordered collection of BlockTransactions that match the query in SearchTransactionsRequest. These BlockTransactions are sorted from most recent block to oldest block.",
+       "type":"object",
+       "required": [
+         "transactions"
+        ],
+       "properties": {
+         "next_offset": {
+           "description":"next_offset is the next offset to use when paginating through transaction results. If this field is not populated, there are no more transactions to query.",
+           "type":"integer",
+           "format":"int64",
+           "minimum": 0,
+           "example": 5
+          },
+         "transactions": {
+           "type":"array",
+           "description":"transactions is an array of BlockTransactions sorted by most recent BlockIdentifier (meaning that transactions in recent blocks appear first). If there are many transactions for a particular search, transactions may not contain all matching transactions. It is up to the caller to paginate these transactions using the max_block field.",
+           "items": {
+             "$ref":"#/components/schemas/BlockTransaction"
+            }
           }
         }
       },
