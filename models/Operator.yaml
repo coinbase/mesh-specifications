@@ -15,6 +15,9 @@
 description: |
   Operator is used by query-related endpoints
   to determine how to apply conditions.
+
+  If this field is not populated, the default
+  `and` value will be used.
 type: string
 enum:
   - or 

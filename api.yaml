@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.7
+  version: 1.4.8
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
@@ -1546,7 +1546,6 @@ components:
       type: object
       required:
         - network_identifier
-        - operator
       properties:
         network_identifier:
           $ref: '#/components/schemas/NetworkIdentifier'
