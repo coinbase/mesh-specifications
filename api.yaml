@@ -1546,7 +1546,6 @@ components:
       type: object
       required:
         - network_identifier
-        - operator
       properties:
         network_identifier:
           $ref: '#/components/schemas/NetworkIdentifier'
