@@ -26,6 +26,13 @@ properties:
     description: |
       CurrentIndex is the index of the last synced block in the
       current stage.
+
+      This is a separate field from current_block_identifier in
+      NetworkStatusResponse because blocks with indexes up to and including
+      the current_index may not yet be queryable by the caller. To reiterate,
+      all indexes up to and including current_block_identifier in
+      NetworkStatusResponse must be queryable via the /block endpoint (excluding
+      indexes less than oldest_block_identifier).
     type: integer
     format: int64
     example: 100 
