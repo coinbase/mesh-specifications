@@ -17,12 +17,7 @@ description: |
   implementation's sync status. It is often used to indicate
   that an implementation is healthy when it cannot be queried 
   until some sync phase occurs.
-
-  If an implementation is immediately queryable, this model is
-  often not populated.
 type: object
-required:
-  - current_index
 properties:
   current_index:
     description: |
@@ -43,3 +38,16 @@ properties:
       Stage is the phase of the sync process.
     type: string
     example: "header sync"
+  synced:
+    description: |
+      sycned is a boolean that indicates if an implementation has reached 
+      the most recent block.
+
+      If set to true, the caller will assume that the implementation
+      is considered healthy and is at the tip of the network.
+
+      This field is particularly useful for quiescent blockchans where
+      the most recent block could have been produced at some variable
+      time in the past where a traditional time comparison with tip
+      may not make sense.
+    type: boolean
