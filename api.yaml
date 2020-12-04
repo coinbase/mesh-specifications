@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.8
+  version: 1.4.9
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
@@ -1620,16 +1620,8 @@ components:
       type: object
       required:
         - transactions
+        - total_count
       properties:
-        next_offset:
-          description: |
-            next_offset is the next offset to use when paginating through
-            transaction results. If this field is not populated, there are
-            no more transactions to query.
-          type: integer
-          format: int64
-          minimum: 0
-          example: 5
         transactions:
           type: array
           description: |
@@ -1642,6 +1634,24 @@ components:
             paginate these transactions using the max_block field.
           items:
             $ref: '#/components/schemas/BlockTransaction'
+        total_count:
+          description: |
+            total_count is the number of results for a given search. Callers
+            typically use this value to concurrently fetch results by offset
+            or to display a virtual page number associated with results.
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
+        next_offset:
+          description: |
+            next_offset is the next offset to use when paginating through
+            transaction results. If this field is not populated, there are
+            no more transactions to query.
+          type: integer
+          format: int64
+          minimum: 0
+          example: 5
 
     # Miscellaneous
     Error:
