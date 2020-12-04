@@ -29,7 +29,7 @@ properties:
     $ref: 'OperationIdentifier.yaml'
   related_operations:
     description: |
-      Restrict referenced related_operations to identifier indexes
+      Restrict referenced related_operations to identifier indices
       < the current operation_identifier.index. This ensures there
       exists a clear DAG-structure of relations.
 

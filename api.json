@@ -1078,7 +1078,7 @@
            "$ref":"#/components/schemas/OperationIdentifier"
           },
          "related_operations": {
-           "description":"Restrict referenced related_operations to identifier indexes < the current operation_identifier.index. This ensures there exists a clear DAG-structure of relations. Since operations are one-sided, one could imagine relating operations in a single transfer or linking operations in a call tree.",
+           "description":"Restrict referenced related_operations to identifier indices < the current operation_identifier.index. This ensures there exists a clear DAG-structure of relations. Since operations are one-sided, one could imagine relating operations in a single transfer or linking operations in a call tree.",
            "type":"array",
            "items": {
              "$ref":"#/components/schemas/OperationIdentifier"
@@ -1175,7 +1175,7 @@
        "type":"object",
        "properties": {
          "current_index": {
-           "description":"CurrentIndex is the index of the last synced block in the current stage. This is a separate field from current_block_identifier in NetworkStatusResponse because blocks with indexes up to and including the current_index may not yet be queryable by the caller. To reiterate, all indexes up to and including current_block_identifier in NetworkStatusResponse must be queryable via the /block endpoint (excluding indexes less than oldest_block_identifier).",
+           "description":"CurrentIndex is the index of the last synced block in the current stage. This is a separate field from current_block_identifier in NetworkStatusResponse because blocks with indices up to and including the current_index may not yet be queryable by the caller. To reiterate, all indices up to and including current_block_identifier in NetworkStatusResponse must be queryable via the /block endpoint (excluding indices less than oldest_block_identifier).",
            "type":"integer",
            "format":"int64",
            "example": 100
@@ -1682,7 +1682,7 @@
         }
       },
      "BlockResponse": {
-       "description":"A BlockResponse includes a fully-populated block or a partially-populated block with a list of other transactions to fetch (other_transactions). As a result of the consensus algorithm of some blockchains, blocks can be omitted (i.e. certain block indexes can be skipped). If a query for one of these omitted indexes is made, the response should not include a `Block` object. It is VERY important to note that blocks MUST still form a canonical, connected chain of blocks where each block has a unique index. In other words, the `PartialBlockIdentifier` of a block after an omitted block should reference the last non-omitted block.",
+       "description":"A BlockResponse includes a fully-populated block or a partially-populated block with a list of other transactions to fetch (other_transactions). As a result of the consensus algorithm of some blockchains, blocks can be omitted (i.e. certain block indices can be skipped). If a query for one of these omitted indices is made, the response should not include a `Block` object. It is VERY important to note that blocks MUST still form a canonical, connected chain of blocks where each block has a unique index. In other words, the `PartialBlockIdentifier` of a block after an omitted block should reference the last non-omitted block.",
        "type":"object",
        "properties": {
          "block": {
