@@ -11,17 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 description: |
-  The related_transaction allows implementations to link together multiple transactions.
-type: object
-required:
-  - transaction_identifier
-  - direction
-properties:
-  network_identifier:
-    $ref: 'NetworkIdentifier.yaml'
-  transaction_identifier:
-    $ref: 'TransactionIdentifier.yaml'
-  direction:
-    $ref: 'Direction.yaml'
+  Direction of the relation (i.e. cross-shard/cross-network sends may reference "back" to an earlier transaction
+  and async execution may reference "forward")
+type: string
+enum:
+  - forward
+  - backward

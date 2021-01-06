@@ -1571,21 +1571,24 @@
          "direction"
         ],
        "properties": {
-         "transaction_identifier": {
-           "$ref":"#/components/schemas/TransactionIdentifier"
-          },
          "network_identifier": {
            "$ref":"#/components/schemas/NetworkIdentifier"
           },
+         "transaction_identifier": {
+           "$ref":"#/components/schemas/TransactionIdentifier"
+          },
          "direction": {
-           "description":"Direction of the relation (i.e. cross-shard/cross-network sends may reference \"back\" to an earlier transaction and async execution may reference \"forward\")",
-           "type":"string",
-           "enum": [
-             "forward",
-             "backward"
-            ]
+           "$ref":"#/components/schemas/Direction"
           }
         }
+      },
+     "Direction": {
+       "description":"Direction of the relation (i.e. cross-shard/cross-network sends may reference \"back\" to an earlier transaction and async execution may reference \"forward\")",
+       "type":"string",
+       "enum": [
+         "forward",
+         "backward"
+        ]
       },
      "AccountBalanceRequest": {
        "description":"An AccountBalanceRequest is utilized to make a balance request on the /account/balance endpoint. If the block_identifier is populated, a historical balance query should be performed.",
