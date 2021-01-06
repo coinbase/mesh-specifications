@@ -1056,6 +1056,12 @@
              "$ref":"#/components/schemas/Operation"
             }
           },
+         "related_transactions": {
+           "type":"array",
+           "items": {
+             "$ref":"#/components/schemas/RelatedTransaction"
+            }
+          },
          "metadata": {
            "description":"Transactions that are related to other transactions (like a cross-shard transaction) should include the tranaction_identifier of these transactions in the metadata.",
            "type":"object",
@@ -1554,6 +1560,30 @@
           },
          "transaction": {
            "$ref":"#/components/schemas/Transaction"
+          }
+        }
+      },
+     "RelatedTransaction": {
+       "description":"The related_transaction allows implementations to link together multiple transactions.",
+       "type":"object",
+       "required": [
+         "transaction_identifier",
+         "direction"
+        ],
+       "properties": {
+         "transaction_identifier": {
+           "$ref":"#/components/schemas/TransactionIdentifier"
+          },
+         "network_identifier": {
+           "$ref":"#/components/schemas/NetworkIdentifier"
+          },
+         "direction": {
+           "description":"Direction of the relation (i.e. cross-shard/cross-network sends may reference \"back\" to an earlier transaction and async execution may reference \"forward\")",
+           "type":"string",
+           "enum": [
+             "forward",
+             "backward"
+            ]
           }
         }
       },

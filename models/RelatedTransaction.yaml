@@ -13,28 +13,21 @@
 # limitations under the License.
 
 description: |
-  Transactions contain an array of Operations
-  that are attributable to the same TransactionIdentifier.
+  The related_transaction allows implementations to link together multiple transactions.
 type: object
 required:
   - transaction_identifier
-  - operations
+  - direction
 properties:
   transaction_identifier:
     $ref: 'TransactionIdentifier.yaml'
-  operations:
-    type: array
-    items:
-      $ref: 'Operation.yaml'
-  related_transactions:
-    type: array
-    items:
-      $ref: 'RelatedTransaction.yaml'
-  metadata:
+  network_identifier:
+    $ref: 'NetworkIdentifier.yaml'
+  direction:
     description: |
-      Transactions that are related to other transactions (like a cross-shard transaction) should include
-      the tranaction_identifier of these transactions in the metadata.
-    type: object
-    example:
-      size: 12378
-      lockTime: 1582272577
+      Direction of the relation (i.e. cross-shard/cross-network sends may reference "back" to an earlier transaction
+      and async execution may reference "forward")
+    type: string
+    enum:
+      - forward
+      - backward
