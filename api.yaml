@@ -801,6 +801,10 @@ components:
       $ref: 'models/Operator.yaml'
     BlockTransaction:
       $ref: 'models/BlockTransaction.yaml'
+    RelatedTransaction:
+      $ref: 'models/RelatedTransaction.yaml'
+    Direction:
+      $ref: 'models/Direction.yaml'
 
     # Request/Responses
     AccountBalanceRequest:
