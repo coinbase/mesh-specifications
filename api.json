@@ -1,7 +1,7 @@
 {
  "openapi":"3.0.2",
  "info": {
-   "version":"1.4.9",
+   "version":"1.4.10",
    "title":"Rosetta",
    "description":"Build Once. Integrate Your Blockchain Everywhere.",
    "license": {
@@ -1056,6 +1056,12 @@
              "$ref":"#/components/schemas/Operation"
             }
           },
+         "related_transactions": {
+           "type":"array",
+           "items": {
+             "$ref":"#/components/schemas/RelatedTransaction"
+            }
+          },
          "metadata": {
            "description":"Transactions that are related to other transactions (like a cross-shard transaction) should include the tranaction_identifier of these transactions in the metadata.",
            "type":"object",
@@ -1556,6 +1562,33 @@
            "$ref":"#/components/schemas/Transaction"
           }
         }
+      },
+     "RelatedTransaction": {
+       "description":"The related_transaction allows implementations to link together multiple transactions. An unpopulated network identifier indicates that the related transaction is on the same network.",
+       "type":"object",
+       "required": [
+         "transaction_identifier",
+         "direction"
+        ],
+       "properties": {
+         "network_identifier": {
+           "$ref":"#/components/schemas/NetworkIdentifier"
+          },
+         "transaction_identifier": {
+           "$ref":"#/components/schemas/TransactionIdentifier"
+          },
+         "direction": {
+           "$ref":"#/components/schemas/Direction"
+          }
+        }
+      },
+     "Direction": {
+       "description":"Used by RelatedTransaction to indicate the direction of the relation (i.e. cross-shard/cross-network sends may reference `backward` to an earlier transaction and async execution may reference `forward`). Can be used to indicate if a transaction relation is from child to parent or the reverse.",
+       "type":"string",
+       "enum": [
+         "forward",
+         "backward"
+        ]
       },
      "AccountBalanceRequest": {
        "description":"An AccountBalanceRequest is utilized to make a balance request on the /account/balance endpoint. If the block_identifier is populated, a historical balance query should be performed.",
