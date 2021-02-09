@@ -50,7 +50,7 @@ properties:
     example: "header sync"
   synced:
     description: |
-      sycned is a boolean that indicates if an implementation has synced up
+      synced is a boolean that indicates if an implementation has synced up
       to the most recent block. If this field is not populated, the caller
       should rely on a traditional tip timestamp comparison to determine if
       an implementation is synced.
