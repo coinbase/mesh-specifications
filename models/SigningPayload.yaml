@@ -32,5 +32,7 @@ properties:
     $ref: 'AccountIdentifier.yaml'
   hex_bytes:
     type: string
+    description: |
+      Hex-encoded string of the payload bytes.
   signature_type:
     $ref: "SignatureType.yaml"

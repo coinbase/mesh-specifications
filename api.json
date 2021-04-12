@@ -1385,7 +1385,8 @@
            "$ref":"#/components/schemas/AccountIdentifier"
           },
          "hex_bytes": {
-           "type":"string"
+           "type":"string",
+           "description":"Hex-encoded string of the payload bytes."
           },
          "signature_type": {
            "$ref":"#/components/schemas/SignatureType"
