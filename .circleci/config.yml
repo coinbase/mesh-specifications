@@ -16,14 +16,14 @@ version: 2.1
 jobs:
   check-license:
     docker:
-      - image: circleci/golang:1.13
+      - image: circleci/golang:1.16
     steps:
       - checkout
       - run: make go-deps
       - run: make check-license
   check-spelling:
     docker:
-      - image: circleci/golang:1.13
+      - image: circleci/golang:1.16
     steps:
       - checkout
       - run: make go-deps
