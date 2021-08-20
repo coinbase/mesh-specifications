@@ -142,7 +142,7 @@ signing SDKs).
 
 Fortunately, it is possible (and encouraged) to build higher-level interfaces
 on top of these low-level endpoints to simplify development for integrators.
-For example, an interface developer may wish to automatically fetch metdata
+For example, an interface developer may wish to automatically fetch metadata
 during their call to construct a transaction so users would not even
 know there are multiple interactions occurring. One could also provide
 a signing library with their higher-level interface so users do not need
