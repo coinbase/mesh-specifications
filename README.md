@@ -415,7 +415,7 @@ a few of completed SDKs on the [website](https://www.rosetta-api.org) or on this
 ## Specification Development
 * `make deps` to install dependencies
 * `make gen` to generate the specification files
-* `make validate` to ensure specification is valid
+* `make check-valid` to ensure specification is valid
 * `make release` to check if code passes all tests run by CircleCI
 
 ## License
