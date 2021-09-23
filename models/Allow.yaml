@@ -103,3 +103,13 @@ properties:
       coins based on the contents of the mempool should populate this field
       as true. If false, requests to `/account/coins` that set `include_mempool`
       as true will be automatically rejected.
+  block_hash_case:
+    $ref: 'Case.yaml'
+    description: |
+      This specifies the normalized case for block hash in the BlockIdentifier.
+      If not specified, it's assumed to be case sensitive.
+  transaction_hash_case:
+    $ref: 'Case.yaml'
+    description: |
+      This specifies the normalized case for transaction hash in the TransactionIdentifier.
+      If not specified, it's assumed to be case sensitive.
