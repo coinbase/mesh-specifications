@@ -1,7 +1,7 @@
 {
  "openapi":"3.0.2",
  "info": {
-   "version":"1.4.10",
+   "version":"1.4.11",
    "title":"Rosetta",
    "description":"Build Once. Integrate Your Blockchain Everywhere.",
    "license": {
@@ -910,7 +910,8 @@
           },
          "hash": {
            "type":"string",
-           "example":"0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85"
+           "example":"0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85",
+           "description":"This should be normalized according to the case specified in the block_hash_case network options."
           }
         }
       },
@@ -937,7 +938,7 @@
         ],
        "properties": {
          "hash": {
-           "description":"Any transactions that are attributable only to a block (ex: a block event) should use the hash of the block as the identifier.",
+           "description":"Any transactions that are attributable only to a block (ex: a block event) should use the hash of the block as the identifier.  This should be normalized according to the case specified in the transaction_hash_case in network options.",
            "type":"string",
            "example":"0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f"
           }
@@ -1311,6 +1312,22 @@
          "mempool_coins": {
            "type":"boolean",
            "description":"Any Rosetta implementation that can update an AccountIdentifier's unspent coins based on the contents of the mempool should populate this field as true. If false, requests to `/account/coins` that set `include_mempool` as true will be automatically rejected."
+          },
+         "block_hash_case": {
+           "description":"This specifies the normalized case for block hash in the BlockIdentifier. If not specified, it's assumed to be case sensitive.",
+           "type":"string",
+           "nullable": true,
+           "enum": [
+             "upper_case",
+             "lower_case",
+             "case_sensitive",
+              null
+            ],
+           "default":"case_sensitive"
+          },
+         "transaction_hash_case": {
+           "$ref":"#/components/schemas/Allow/properties/block_hash_case",
+           "description":"This specifies the normalized case for transaction hash in the TransactionIdentifier. If not specified, it's assumed to be case sensitive."
           }
         }
       },

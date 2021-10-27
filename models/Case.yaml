@@ -1,4 +1,4 @@
-# Copyright 2020 Coinbase, Inc.
+# Copyright 2021 Coinbase, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,13 @@
 # limitations under the License.
 
 description: |
-  The block_identifier uniquely identifies a block in a particular network.
-type: object
-required:
-  - index
-  - hash
-properties:
-  index:
-    description: |
-      This is also known as the block height.
-    type: integer
-    format: int64
-    example: 1123941
-  hash:
-    type: string
-    example: "0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85"
-    description: |
-      This should be normalized according to the case specified in the block_hash_case
-      network options.
+  Case specifies the expected case for strings and hashes.
+type: string
+nullable: true
+enum:
+  - upper_case
+  - lower_case
+  - case_sensitive
+  - null
+default: case_sensitive
+
