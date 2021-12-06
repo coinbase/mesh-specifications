@@ -12,15 +12,14 @@ Before filing a bug report, ensure that your issue [has not already been reporte
 
 If your bug hasn’t been fixed, follow these steps to file a bug report:
 
-1. If your issue is not reported or fixed, click the [*New*][5] button from the [*Issues*][1] page. A new interface will appear.
-2. Find _Bug report_ on the list, and click [_Get Started_][6]. A new interface will appear.
-3. Add a title for your bug report. It should briefly describe the problem.
-4. Follow the template that appears in the Write text box. This is the best way to describe the bug.
-* **Describe the bug** - A clear and concise description of what the bug is.
-* **To Reproduce** - Steps to reproduce the behavior.
-* **Expected behavior** - A clear and concise description of what you expected to happen.
-* **Additional context** - You can include any relevant stack traces or debugging output in this section.
-5. Click _Submit new issue_ to finish filing the bug report.
+1. [Open an issue in GitHub][10].
+2. Add a title for your bug report. It should briefly describe the problem.
+3. Follow the template that appears in the Write text box. This is the best way to describe the bug.
+    * **Describe the bug** - A clear and concise description of what the bug is.
+    * **To Reproduce** - Steps to reproduce the behavior.
+    * **Expected behavior** - A clear and concise description of what you expected to happen.
+    * **Additional context** - You can include any relevant stack traces or debugging output in this section.
+4. Click _Submit new issue_ to finish filing the bug report.
 
 ## Feature Requests
 
@@ -28,15 +27,14 @@ We welcome feedback with or without pull requests. If you have an idea for how t
 
 To submit a feature request, follow these steps:
 
-1. Click the [*New*][5] button from the [*Issues*][1] page. A new interface will appear.
-2. Find _Feature request_ on the list, and click [_Get Started_][7]. A new interface will appear.
-3. Add a title for your feature request. It should briefly describe your requested feature.
-4. Follow the template that appears in the Write text box. This is the best way to explain your request. Be clear and concise in your responses.
-* **Is your feature request related to a problem? Please describe.** - Describe what the problem is. For example, “I'm always frustrated when [...]”.
-* **Describe the solution you'd like** - Describe what you want to happen.
-* **Describe alternatives you've considered** - Describe any alternative solutions or features you've considered.
-* **Additional context** - You can add any other context or screenshots about the feature request in this section.
-5. Click _Submit new issue_ to submit the feature request.
+1. [Open an issue in GitHub][10].
+2. Add a title for your feature request. It should briefly describe your requested feature.
+3. Follow the template that appears in the Write text box. This is the best way to explain your request. Be clear and concise in your responses.
+    * **Is your feature request related to a problem? Please describe.** - Describe what the problem is. For example, “I'm always frustrated when [...]”.
+    * **Describe the solution you'd like** - Describe what you want to happen.
+    * **Describe alternatives you've considered** - Describe any alternative solutions or features you've considered.
+    * **Additional context** - You can add any other context or screenshots about the feature request in this section.
+4. Click _Submit new issue_ to submit the feature request.
 
 The best way to see a feature added, however, is to submit a pull request.
 
@@ -52,10 +50,8 @@ The best way to see a feature added, however, is to submit a pull request.
 
 To submit your pull request, follow these steps:
 
-1. From the [_Pull requests_][8] page, select the [_New_][9] button. A new interface will appear.
-2. In the _Compare changes_ section, confirm that the branch in the `base:` menu is the branch where you want to merge your changes. In this case, the *base:* branch should be `master`.
-3. Confirm that the branch in the `compare:` menu is the topic branch where you made your changes.
-4. Click _Create pull request_ to submit your pull request.
+1. [Open a pull request in GitHub][11]
+2. Click _Create pull request_ to submit your pull request.
 
 Once you submit your pull request, these things will happen.
 
@@ -74,3 +70,5 @@ All support requests must be made via [our support team][3].
 {7]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
 [8]: https://github.com/coinbase/rosetta-specifications/pulls
 [9]: https://github.com/coinbase/rosetta-specifications/compare
+[10]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-an-issue
+[11]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-a-pull-request
