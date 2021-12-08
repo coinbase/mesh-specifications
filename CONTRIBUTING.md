@@ -53,7 +53,7 @@ To submit your pull request, follow these steps:
 1. [Open a pull request in GitHub][11]
 2. Click _Create pull request_ to submit your pull request.
 
-Once you submit your pull request, these things will happen.
+Once you submit your pull request, a reviewer will revise it, and either approve it or offer suggestions.
 
 ## Support Requests
 
