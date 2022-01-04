@@ -67,7 +67,7 @@ All support requests must be made via [our support team][3].
 [4]: https://github.com/coinbase/rosetta-sdk-go/pull/294/files
 [5]: https://github.com/coinbase/rosetta-specifications/issues/new/choose
 [6]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=bug&template=bug_report.md&title=
-{7]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
+[7]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
 [8]: https://github.com/coinbase/rosetta-specifications/pulls
 [9]: https://github.com/coinbase/rosetta-specifications/compare
 [10]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-an-issue
