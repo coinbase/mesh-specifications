@@ -37,49 +37,7 @@ was previously known as the Wallet API. Their names were changed to better
 reflect their functionality._
 
 ### Data API
-```
-                                  Caller (i.e. Coinbase)                              + Data API Implementation
-                                 +------------------------------------------------------------------------------------+
-                               X                                                      |
-                               X      Get Supported Networks +---------------------------------> /network/list
-                               X                                                      |                +
-                               X  +-----------+--------------------------------------------------------+
-      Get supported networks,  X  |           v                                       |
-      their supported options, X  |   Get Network Options +------------------------------------> /network/options
-      and their status         X  |                                                   |
-                               X  +-----------+                                       |
-                               X              v                                       |
-                               X      Get Network Status +-------------------------------------> /network/status
-                               X                                                      |
-                                                                                      |
-                                   X                                                  |
-                                   X  Get Block +----------------------------------------------> /block
-                                   X                                                  |             +
-                        +---------+X                +-----------------------------------------------+
-                        |          X                v                                 |
-Ensure balance computed |          X  [Optional] Get Additional Block Transactions +-----------> /block/transaction
-from block operations   |          X                                                  |
-equals balance on node  |                                                             |
-                        |                                                             |
-                        +-----------> Get account balance for each +---------------------------> /account/balance
-                                      account seen in a block                         |
-                                                                                      |
-                                                                                      |
-                                   X                                                  |
-                                   X  Get Mempool Transactions +-------------------------------> /mempool
-      Monitor the mempool for      X                                                  |              +
-      broadcast transaction status X                 +-----------------------------------------------+
-      and incoming deposits        X                 v                                |
-                                   X  Get a Specific Mempool Transaction +---------------------> /mempool/transaction
-                                   X                                                  |
-                                                                                      |
-                                                                                      |
-                                   X                                                  |
-  Make arbitrary call to to access X  Make Arbitrary Procedure Call +--------------------------> /call
-  network-specific data            X                                                  |
-                                   X                                                  |
-                                                                                      +
-```
+![Construction API Flow of Operations](images/data_api_flow_of_operations.jpg)
 
 ### Construction API
 If you have seen illustrations of the flow of transaction
@@ -89,50 +47,7 @@ implementations are fully stateless, can perform construction
 offline (when metadata like an account nonce is pre-fetched),
 and never have access to private key material.
 
-```
-                               Caller (i.e. Coinbase)                + Construction API Implementation
-                              +-------------------------------------------------------------------------------------------+
-                                                                     |
-                               Derive Address   +----------------------------> /construction/derive
-                               from Public Key                       |
-                                                                     |
-                             X                                       |
-                             X Create Metadata Request +---------------------> /construction/preprocess
-                             X (array of operations)                 |                    +
-    Get metadata needed      X                                       |                    |
-    to construct transaction X            +-----------------------------------------------+
-                             X            v                          |
-                             X Fetch Online Metadata +-----------------------> /construction/metadata (online)
-                             X                                       |
-                                                                     |
-                             X                                       |
-                             X Construct Payloads to Sign +------------------> /construction/payloads
-                             X (array of operations)                 |                   +
-                             X                                       |                   |
- Create unsigned transaction X          +------------------------------------------------+
-                             X          v                            |
-                             X Parse Unsigned Transaction +------------------> /construction/parse
-                             X to Confirm Correctness                |
-                             X                                       |
-                                                                     |
-                             X                                       |
-                             X Sign Payload(s) +-----------------------------> /construction/combine
-                             X (using caller's own detached signer)  |                 +
-                             X                                       |                 |
-   Create signed transaction X         +-----------------------------------------------+
-                             X         v                             |
-                             X Parse Signed Transaction +--------------------> /construction/parse
-                             X to Confirm Correctness                |
-                             X                                       |
-                                                                     |
-                             X                                       |
-                             X Get hash of signed transaction +--------------> /construction/hash
-Broadcast Signed Transaction X to monitor status                     |
-                             X                                       |
-                             X Submit Transaction +--------------------------> /construction/submit (online)
-                             X                                       |
-                                                                     +
-```
+![Construction API Flow of Operations](images/construction_api_flow_of_operations.jpg)
 
 #### Simplified Flow using a Higher-Level Interface
 Many developers may not have security constraints that dictate construction must
@@ -142,43 +57,13 @@ signing SDKs).
 
 Fortunately, it is possible (and encouraged) to build higher-level interfaces
 on top of these low-level endpoints to simplify development for integrators.
-For example, an interface developer may wish to automatically fetch metdata
+For example, an interface developer may wish to automatically fetch metadata
 during their call to construct a transaction so users would not even
 know there are multiple interactions occurring. One could also provide
 a signing library with their higher-level interface so users do not need
 to use a detached signer. Here is an example of a simplified flow:
-```
-                               Caller (i.e. Mobile Wallet)           + Construction API Implementation
-                              +-------------------------------------------------------------------------------------------+
-                                                                     |
-                               Derive Address   +----------------------------> /construction/derive
-                               from Public Key                       |
-                                                                     |                                  X
-                                                                     |                                  X   Fetch metadata needed for
-                                                                     |                                  X   construction automatically
-                             X                                       |                                  X
- Create unsigned transaction X Construct Payloads to Sign +------------------> /construction/payloads   X   /construction/preprocess
-                             X (array of operations)                 |                                  X             +
-                             X                                       |                                  X             v
-                                                                     |                                  X   /construction/metadata
-                             X                                       |                                  X
-                             X Sign Payload(s) +-----------------------------> /construction/combine
-                             X (using rosetta-sdk-go keys package)   |                 +
-                             X                                       |                 |
-   Create signed transaction X         +-----------------------------------------------+
-                             X         v                             |
-                             X Parse Signed Transaction +--------------------> /construction/parse
-                             X to Confirm Correctness                |
-                             X                                       |
-                                                                     |
-                             X                                       |
-                             X Get hash of signed transaction +--------------> /construction/hash
-Broadcast Signed Transaction X to monitor status                     |
-                             X                                       |
-                             X Submit Transaction +--------------------------> /construction/submit
-                             X                                       |
-                                                                     +
-```
+
+![Construction API Simplified Flow of Operations](images/construction_api_simplified_flow.jpg)
 
 Why go through all this trouble to build a higher-level interface on this
 Construction API instead of just using existing SDKs, you may be wondering?
@@ -273,8 +158,7 @@ For many developers, the best way to get started is to look at an example. For t
 we developed a complete Rosetta API reference implementation for [Bitcoin](https://github.com/coinbase/rosetta-bitcoin)
 and [Ethereum](https://github.com/coinbase/rosetta-ethereum).
 
-_Developers of Bitcoin-like or Ethereum-like blockchains may find it easier to fork these reference implementations than
-to write an implementation from scratch._
+_Developers of Bitcoin-like or Ethereum-like blockchains may find it easier to fork these reference implementations than to write an implementation from scratch._
 
 ### Pick a Language
 #### Using Golang
@@ -421,4 +305,4 @@ a few of completed SDKs on the [website](https://www.rosetta-api.org) or on this
 ## License
 This project is available open source under the terms of the [Apache 2.0 License](https://opensource.org/licenses/Apache-2.0).
 
-© 2020 Coinbase
+© 2021 Coinbase
