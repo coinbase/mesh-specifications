@@ -6,7 +6,23 @@ All interactions with this project follow our [Code of Conduct][code-of-conduct]
 
 [code-of-conduct]: https://github.com/coinbase/code-of-conduct
 
-## Bug Reports
+## How to Contribute
+
+You can contribute to this repository by asking questions, providing feedback, and reporting issues.
+
+### Asking Questions
+
+Submit your questions via the [Rosetta Community boards][13].
+
+### Providing Feedback
+
+You can also use the [Rosetta Community boards][13] to provide feedback.
+
+### Reporting Issues
+
+You can report issues by submitting bug reports, feature requests, or pull requests via GitHub. You **must** submit [security issues](#security-issues) and [support requests](#support-requests) through the links provided.
+
+#### Bug Reports
 
 Before filing a bug report, ensure that your issue [has not already been reported][1]. It may already be fixed!
 
@@ -21,7 +37,7 @@ If your bug hasn’t been fixed, follow these steps to file a bug report:
     * **Additional context** - You can include any relevant stack traces or debugging output in this section.
 4. Click _Submit new issue_ to finish filing the bug report.
 
-## Feature Requests
+#### Feature Requests
 
 We welcome feedback with or without pull requests. If you have an idea for how to improve the project, great! All we ask is that you take the time to write a clear and concise explanation of the need you are trying to solve. If you have thoughts on _how_ it can be solved, include those too!
 
@@ -38,7 +54,7 @@ To submit a feature request, follow these steps:
 
 The best way to see a feature added, however, is to submit a pull request.
 
-## Pull Requests
+#### Pull Requests
 
 * Before creating your pull request, it's usually worth asking whether the code you're planning on writing will be considered for merging. You can do this by [opening an issue][1] and asking. It may also help give the maintainers context for when the time comes to review your code.
 
@@ -50,16 +66,22 @@ The best way to see a feature added, however, is to submit a pull request.
 
 To submit your pull request, follow these steps:
 
-1. [Open a pull request in GitHub][11]
+1. Follow these instructions on how to [open a pull request in GitHub][11].
 2. Click _Create pull request_ to submit your pull request.
 
 Once you submit your pull request, a reviewer will revise it, and either approve it or offer suggestions.
 
-## Support Requests
+#### Security Issues
 
-For security reasons, any communication referencing support tickets for Coinbase products will be ignored. The request will have its content redacted and will be locked to prevent further discussion.
+You can send a report through Coinbase's [H1 program][12]. Check out the [Security][14] tab for more information.
+
+#### Support Requests
 
 All support requests must be made via [our support team][3].
+
+**For security reasons, any communication referencing support tickets for Coinbase products will be ignored.** The request will have its content redacted and will be locked to prevent further discussion.
+
+© 2022 Coinbase
 
 [1]: https://github.com/coinbase/rosetta-specifications/issues
 [2]: https://chris.beams.io/posts/git-commit/#seven-rules
@@ -72,3 +94,6 @@ All support requests must be made via [our support team][3].
 [9]: https://github.com/coinbase/rosetta-specifications/compare
 [10]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-an-issue
 [11]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-a-pull-request
+[12]: https://hackerone.com/coinbase
+[13]: https://community.rosetta-api.org
+[14]: https://github.com/coinbase/rosetta-specifications/security
