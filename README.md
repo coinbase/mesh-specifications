@@ -25,7 +25,7 @@ Requests and responses can be crafted with auto-generated code using [Swagger Co
 
 ## Installation
 
-<!-- Any installation required with Rosetta specs? -->
+No installation is required, as the repository only includes specification files.
 
 ## Documentation
 
@@ -47,34 +47,27 @@ Our documentation is divided into the following sections:
 You may contribute to the `rosetta-specifications` project in various ways:
 
 * [Asking Questions](CONTRIBUTING.md/#asking-questions)
-
 * [Providing Feedback](CONTRIBUTING.md/#providing-feedback)
-
 * [Reporting Issues](CONTRIBUTING.md/#reporting-issues)
 
 Read our [Contributing](CONTRIBUTING.MD) documentation for more information.
 
-When you've finished an implementation for a blockchain, share your work in the [ecosystem category of the community site](https://community.rosetta-api.org/c/ecosystem). Platforms looking for implementations for certain blockchains will be monitoring this section of the website for high-quality implementations they can use for integration (make sure your implementation meets the ["expectations"](https://www.rosetta-api.org/docs/node_deployment.html) of any implementation).
+When you've finished an implementation for a blockchain, share your work in the [ecosystem category of the community site](https://community.rosetta-api.org/c/ecosystem). Platforms looking for implementations for certain blockchains will be monitoring this section of the website for high-quality implementations they can use for integration. Make sure that your implementation meets the [expectations](https://www.rosetta-api.org/docs/node_deployment.html) of any implementation.
 
 ## Related Projects
 
-* [rosetta-sdk-go][https://github.com/coinbase/rosetta-sdk-go] — 
+* [rosetta-sdk-go][https://github.com/coinbase/rosetta-sdk-go] — The `rosetta-sdk-go` SDK provides a collection of packages used for interaction with the Rosetta API specification. Much of the SDK code is generated from this, the [rosetta-specifications](https://github.com/coinbase/rosetta-specifications) repository.
 * [rosetta-cli][https://github.com/coinbase/rosetta-ecosystem] — Use the `rosetta-cli` tool to test your Rosetta API implementation. The tool also provides the ability to look up block contents and account balances.
 
 ### Reference Implementations
 
-To help you with examples, we developed complete Rosetta API reference implementations for [Bitcoin](https://github.com/coinbase/rosetta-bitcoin) and [Ethereum](https://github.com/coinbase/rosetta-ethereum). 
-
-* [rosetta-bitcoin][https://github.com/coinbase/rosetta-bitcoin]
-* [rosetta-ethereum][https://github.com/coinbase/rosetta-ethereum]
-
-Developers of Bitcoin-like or Ethereum-like blockchains may find it easier to fork these reference implementations than to write an implementation from scratch.
+To help you with examples, we developed complete Rosetta API reference implementations for [Bitcoin](https://github.com/coinbase/rosetta-bitcoin) and [Ethereum](https://github.com/coinbase/rosetta-ethereum). Developers of Bitcoin-like or Ethereum-like blockchains may find it easier to fork these reference implementations than to write an implementation from scratch.
 
 You can also find community implementations for a variety of blockchains in the [rosetta-ecosystem][https://github.com/coinbase/rosetta-ecosystem] repository, and in the [ecosystem category](https://community.rosetta-api.org/c/ecosystem) of our community site. 
 
 ## Specification Development
 
-While working on improvements to this repository, we recommend that you use these commands to check your progress:
+While working on improvements to this repository, we recommend that you use these commands to check your code:
 
 * `make deps` to install dependencies
 * `make gen` to generate the specification files
