@@ -1314,19 +1314,11 @@
            "description":"Any Rosetta implementation that can update an AccountIdentifier's unspent coins based on the contents of the mempool should populate this field as true. If false, requests to `/account/coins` that set `include_mempool` as true will be automatically rejected."
           },
          "block_hash_case": {
-           "description":"This specifies the normalized case for block hash in the BlockIdentifier. If not specified, it's assumed to be case sensitive.",
-           "type":"string",
-           "nullable": true,
-           "enum": [
-             "upper_case",
-             "lower_case",
-             "case_sensitive",
-              null
-            ],
-           "default":"case_sensitive"
+           "$ref":"#/components/schemas/Case",
+           "description":"This specifies the normalized case for block hash in the BlockIdentifier. If not specified, it's assumed to be case sensitive."
           },
          "transaction_hash_case": {
-           "$ref":"#/components/schemas/Allow/properties/block_hash_case",
+           "$ref":"#/components/schemas/Case",
            "description":"This specifies the normalized case for transaction hash in the TransactionIdentifier. If not specified, it's assumed to be case sensitive."
           }
         }
@@ -1608,6 +1600,18 @@
          "forward",
          "backward"
         ]
+      },
+     "Case": {
+       "description":"Case specifies the expected case for strings and hashes.",
+       "type":"string",
+       "nullable": true,
+       "enum": [
+         "upper_case",
+         "lower_case",
+         "case_sensitive",
+          null
+        ],
+       "default":"case_sensitive"
       },
      "AccountBalanceRequest": {
        "description":"An AccountBalanceRequest is utilized to make a balance request on the /account/balance endpoint. If the block_identifier is populated, a historical balance query should be performed.",
