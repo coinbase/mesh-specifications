@@ -54,13 +54,11 @@ The best way to see a feature added, however, is to submit a pull request.
 
 #### Pull Requests
 
-* Before creating your pull request, it's usually worth asking whether the code you're planning on writing will be considered for merging. You can do this by [opening an issue][1] and asking. It may also help give the maintainers context for when the time comes to review your code.
+Before creating your pull request, it's usually worth asking whether the code you're planning on writing will be considered for merging. You can do this by [opening an issue][1] and asking. It may also help give the maintainers context for when the time comes to review your code.
 
-* Ensure your [commit messages are well-written][2]. This can double as your pull request message, so it pays to take the time to write a clear message.
+Ensure that your [commit messages are well-written][2]. This can double as your pull request message, so it pays to take the time to write a clear message.
 
-* Add tests for your feature. You should be able to [look at other tests][4] for examples. If you're unsure, don't hesitate to [open an issue][1] and ask!
-
-* Submit your pull request!
+Additionally, make sure that you have written unit tests for your changes. If you're unsure as to what to test, don't hesitate to [open an issue][1] and ask!
 
 To submit your pull request, follow these steps:
 
@@ -81,10 +79,11 @@ All support requests must be made via [our support team][3].
 
 © 2022 Coinbase
 
+<!-- Before adding link 15, populate link 4. One you do that, please erase this note. --->
 [1]: https://github.com/coinbase/rosetta-specifications/issues
 [2]: https://chris.beams.io/posts/git-commit/#seven-rules
 [3]: https://support.coinbase.com/customer/en/portal/articles/2288496-how-can-i-contact-coinbase-support-
-[4]: https://github.com/coinbase/rosetta-sdk-go/pull/294/files
+<!--- [4]: link removed --->
 [5]: https://github.com/coinbase/rosetta-specifications/issues/new/choose
 [6]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=bug&template=bug_report.md&title=
 [7]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
