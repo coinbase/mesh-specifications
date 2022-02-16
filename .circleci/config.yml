@@ -16,21 +16,21 @@ version: 2.1
 jobs:
   check-license:
     docker:
-      - image: circleci/golang:1.16
+      - image: cimg/go:1.16
     steps:
       - checkout
       - run: make go-deps
       - run: make check-license
   check-spelling:
     docker:
-      - image: circleci/golang:1.16
+      - image: cimg/go:1.16
     steps:
       - checkout
       - run: make go-deps
       - run: make spellcheck 
   check-gen:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:12.22
         user: root
     steps:
       - checkout
@@ -38,7 +38,7 @@ jobs:
       - run: make check-gen
   check-valid:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:12.22
         user: root
     steps:
       - checkout
