@@ -14,7 +14,7 @@
 
 openapi: 3.0.2
 info:
-  version: 1.4.11
+  version: 1.4.12
   title: Rosetta
   description: |
     Build Once. Integrate Your Blockchain Everywhere.
@@ -805,6 +805,8 @@ components:
       $ref: 'models/RelatedTransaction.yaml'
     Direction:
       $ref: 'models/Direction.yaml'
+    Case:
+      $ref: 'models/Case.yaml'
 
     # Request/Responses
     AccountBalanceRequest:

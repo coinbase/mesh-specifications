@@ -1,7 +1,7 @@
 {
  "openapi":"3.0.2",
  "info": {
-   "version":"1.4.11",
+   "version":"1.4.12",
    "title":"Rosetta",
    "description":"Build Once. Integrate Your Blockchain Everywhere.",
    "license": {
@@ -1314,19 +1314,11 @@
            "description":"Any Rosetta implementation that can update an AccountIdentifier's unspent coins based on the contents of the mempool should populate this field as true. If false, requests to `/account/coins` that set `include_mempool` as true will be automatically rejected."
           },
          "block_hash_case": {
-           "description":"This specifies the normalized case for block hash in the BlockIdentifier. If not specified, it's assumed to be case sensitive.",
-           "type":"string",
-           "nullable": true,
-           "enum": [
-             "upper_case",
-             "lower_case",
-             "case_sensitive",
-              null
-            ],
-           "default":"case_sensitive"
+           "$ref":"#/components/schemas/Case",
+           "description":"This specifies the normalized case for block hash in the BlockIdentifier. If not specified, it's assumed to be case sensitive."
           },
          "transaction_hash_case": {
-           "$ref":"#/components/schemas/Allow/properties/block_hash_case",
+           "$ref":"#/components/schemas/Case",
            "description":"This specifies the normalized case for transaction hash in the TransactionIdentifier. If not specified, it's assumed to be case sensitive."
           }
         }
@@ -1378,13 +1370,14 @@
         }
       },
      "CurveType": {
-       "description":"CurveType is the type of cryptographic curve associated with a PublicKey. * secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3) * secp256r1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3) * edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf) * tweedle: 1st pk : Fq.t (32 bytes) || 2nd pk : Fq.t (32 bytes) (https://github.com/CodaProtocol/coda/blob/develop/rfcs/0038-rosetta-construction-api.md#marshal-keys)",
+       "description":"CurveType is the type of cryptographic curve associated with a PublicKey. * secp256k1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3) * secp256r1: SEC compressed - `33 bytes` (https://secg.org/sec1-v2.pdf#subsubsection.2.3.3) * edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf) * tweedle: 1st pk : Fq.t (32 bytes) || 2nd pk : Fq.t (32 bytes) (https://github.com/CodaProtocol/coda/blob/develop/rfcs/0038-rosetta-construction-api.md#marshal-keys) * pallas: `x (255 bits) || y-parity-bit (1-bit) - 32 bytes` (https://github.com/zcash/pasta)",
        "type":"string",
        "enum": [
          "secp256k1",
          "secp256r1",
          "edwards25519",
-         "tweedle"
+         "tweedle",
+         "pallas"
         ]
       },
      "SigningPayload": {
@@ -1607,6 +1600,18 @@
          "forward",
          "backward"
         ]
+      },
+     "Case": {
+       "description":"Case specifies the expected case for strings and hashes.",
+       "type":"string",
+       "nullable": true,
+       "enum": [
+         "upper_case",
+         "lower_case",
+         "case_sensitive",
+          null
+        ],
+       "default":"case_sensitive"
       },
      "AccountBalanceRequest": {
        "description":"An AccountBalanceRequest is utilized to make a balance request on the /account/balance endpoint. If the block_identifier is populated, a historical balance query should be performed.",
