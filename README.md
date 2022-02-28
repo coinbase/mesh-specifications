@@ -13,9 +13,10 @@ This repository contains all specification files used to generate code for the R
   <a href="https://circleci.com/gh/coinbase/rosetta-specifications/tree/master"><img src="https://circleci.com/gh/coinbase/rosetta-specifications/tree/master.svg?style=shield" /></a>
   <a href="https://github.com/coinbase/rosetta-specifications/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/coinbase/rosetta-specifications.svg" /></a>
 </p>
-
+<p align="center">
 Build once. 
 Integrate your blockchain everywhere.
+</p>
 
 ## Overview
 
