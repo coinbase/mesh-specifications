@@ -64,7 +64,7 @@ When you've finished an implementation for a blockchain, share your work in the 
 
 To help you with examples, we developed complete Rosetta API reference implementations for [Bitcoin](https://github.com/coinbase/rosetta-bitcoin) and [Ethereum](https://github.com/coinbase/rosetta-ethereum). Developers of Bitcoin-like or Ethereum-like blockchains may find it easier to fork these reference implementations than to write an implementation from scratch.
 
-You can also find community implementations for a variety of blockchains in the [rosetta-ecosystem][https://github.com/coinbase/rosetta-ecosystem] repository, and in the [ecosystem category](https://community.rosetta-api.org/c/ecosystem) of our community site. 
+You can also find community implementations for a variety of blockchains in the [rosetta-ecosystem](https://github.com/coinbase/rosetta-ecosystem) repository, and in the [ecosystem category](https://community.rosetta-api.org/c/ecosystem) of our community site. 
 
 ## Specification Development
 
@@ -77,11 +77,11 @@ While working on improvements to this repository, we recommend that you use thes
 
 ### Adding New CurveTypes or SignatureTypes
 
-Unlike the Data API where there are no global type constraints (e.g., you can specify any operation type), the Construction API has a clearly enumerated list of supported curves and signatures. Each one of these items has a clearly specified format that all implementations should expect to receive.
+Unlike the [Data API](https://www.rosetta-api.org/docs/data_api_introduction.html) where there are no global type constraints (e.g., you can specify any operation type), the [Construction API](https://www.rosetta-api.org/docs/construction_api_introduction.html) has a clearly enumerated list of supported curves and signatures. Each one of these items has a clearly specified format that all implementations should expect to receive.
 
 If a curve or signature you are employing is not enumerated in the [specification](https://www.rosetta-api.org/docs/Reference.html), you will need to open a PR against the specification to add it along with the standard format it will be represented in.
 
-It is up to the caller of a Construction API implementation to implement key generation and signing for a particular `CurveType:SignatureType`. There is a `keys` package in [rosetta-sdk-go]((https://github.com/coinbase/rosetta-sdk-go)) that is commonly used by callers and anyone in the community can implement additional schemes there.
+It is up to the caller of a Construction API implementation to implement key generation and signing for a particular [`CurveType:SignatureType`](https://www.rosetta-api.org/docs/models/CurveType.html). There is a `keys` package in [rosetta-sdk-go](https://github.com/coinbase/rosetta-sdk-go) that is commonly used by callers and anyone in the community can implement additional schemes there.
 
 ## License
 
