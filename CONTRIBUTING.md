@@ -29,10 +29,6 @@ If your bug hasn’t been fixed, follow these steps to file a bug report:
 1. [Open an issue in GitHub][10].
 2. Add a title for your bug report. It should briefly describe the problem.
 3. Follow the template that appears in the Write text box. This is the best way to describe the bug.
-    * **Describe the bug** - A clear and concise description of what the bug is.
-    * **To Reproduce** - Steps to reproduce the behavior.
-    * **Expected behavior** - A clear and concise description of what you expected to happen.
-    * **Additional context** - You can include any relevant stack traces or debugging output in this section.
 4. Click _Submit new issue_ to finish filing the bug report.
 
 #### Feature Requests
@@ -44,10 +40,6 @@ To submit a feature request, follow these steps:
 1. [Open an issue in GitHub][10].
 2. Add a title for your feature request. It should briefly describe your requested feature.
 3. Follow the template that appears in the Write text box. This is the best way to explain your request. Be clear and concise in your responses.
-    * **Is your feature request related to a problem? Please describe.** - Describe what the problem is. For example, “I'm always frustrated when [...]”.
-    * **Describe the solution you'd like** - Describe what you want to happen.
-    * **Describe alternatives you've considered** - Describe any alternative solutions or features you've considered.
-    * **Additional context** - You can add any other context or screenshots about the feature request in this section.
 4. Click _Submit new issue_ to submit the feature request.
 
 The best way to see a feature added, however, is to submit a pull request.
@@ -57,8 +49,6 @@ The best way to see a feature added, however, is to submit a pull request.
 Before creating your pull request, it's usually worth asking whether the code you're planning on writing will be considered for merging. You can do this by [opening an issue][1] and asking. It may also help give the maintainers context for when the time comes to review your code.
 
 Ensure that your [commit messages are well-written][2]. This can double as your pull request message, so it pays to take the time to write a clear message.
-
-Additionally, make sure that you have written unit tests for your changes. If you're unsure as to what to test, don't hesitate to [open an issue][1] and ask!
 
 To submit your pull request, follow these steps:
 
