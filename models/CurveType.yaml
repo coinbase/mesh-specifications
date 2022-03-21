@@ -20,6 +20,7 @@ description: |
   * edwards25519: `y (255-bits) || x-sign-bit (1-bit)` - `32 bytes` (https://ed25519.cr.yp.to/ed25519-20110926.pdf)
   * tweedle: 1st pk : Fq.t (32 bytes) || 2nd pk : Fq.t (32 bytes) (https://github.com/CodaProtocol/coda/blob/develop/rfcs/0038-rosetta-construction-api.md#marshal-keys)
   * pallas: `x (255 bits) || y-parity-bit (1-bit) - 32 bytes` (https://github.com/zcash/pasta)
+  * bls12381: `G1 Point in compressed Zcash format (48 bytes)` (https://datatracker.ietf.org/doc/draft-irtf-cfrg-bls-signature/04/)
 
 type: string
 enum:
@@ -28,3 +29,4 @@ enum:
   - edwards25519
   - tweedle
   - pallas
+  - bls12381
