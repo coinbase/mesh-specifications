@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  go_version: 1.16
+
+jobs:
+  Check-License:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          version: latest
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.go_version }}
+      - run: make go-deps
+      - run: make check-license
+
+  Check-Spelling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          version: latest
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.go_version }}
+      - run: make go-deps
+      - run: make spellcheck
+
+  Check-Gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          version: latest
+      - run: make node-deps
+      - run: make check-gen
+
+  Check-Valid:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          version: latest
+      - run: make node-deps
+      - run: make check-valid
+
+  Salus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          version: latest
+      - run: make salus
