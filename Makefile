@@ -1,5 +1,6 @@
 .PHONY: node-deps go-deps deps gen check-gen add-license check-license spellcheck shellcheck salus check-valid
-LICENCE_SCRIPT=addlicense -c "Coinbase, Inc." -l "apache" -v
+ADDLICENSE_IGNORE=-ignore ".github/**/*" -ignore ".idea/**/*"
+LICENCE_SCRIPT=addlicense -c "Coinbase, Inc." -l "apache" -v ${ADDLICENSE_IGNORE}
 GO_INSTALL=GO111MODULE=off go get
 
 node-deps:
