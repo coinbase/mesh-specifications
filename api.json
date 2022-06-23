@@ -1880,8 +1880,7 @@
        "required": [
          "current_block_identifier",
          "current_block_timestamp",
-         "genesis_block_identifier",
-         "peers"
+         "genesis_block_identifier"
         ],
        "properties": {
          "current_block_identifier": {
