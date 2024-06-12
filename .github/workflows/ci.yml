@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ env.go_version }}
-      - run: make go-deps
+      # - run: make go-deps
       - run: make check-license
 
   Check-Spelling:
