@@ -1,4 +1,4 @@
-# Contributing to Rosetta-Specifications
+# Contributing to Mesh-Specifications
 
 ## Code of Conduct
 
@@ -10,11 +10,11 @@ You can contribute to this repository by asking questions, providing feedback, a
 
 ### Asking Questions
 
-Submit your questions via the [Rosetta Community boards][13].
+Submit your questions via the [Mesh Community boards][13].
 
 ### Providing Feedback
 
-You can also use the [Rosetta Community boards][13] to provide feedback.
+You can also use the [Mesh Community boards][13] to provide feedback.
 
 ### Reporting Issues
 
@@ -70,17 +70,17 @@ All support requests must be made via [our support team][3].
 © 2022 Coinbase
 
 <!-- Before adding link 15, populate link 4. One you do that, please erase this note. --->
-[1]: https://github.com/coinbase/rosetta-specifications/issues
+[1]: https://github.com/coinbase/mesh-specifications/issues
 [2]: https://chris.beams.io/posts/git-commit/#seven-rules
 [3]: https://support.coinbase.com/customer/en/portal/articles/2288496-how-can-i-contact-coinbase-support-
 <!--- [4]: link removed --->
-[5]: https://github.com/coinbase/rosetta-specifications/issues/new/choose
-[6]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=bug&template=bug_report.md&title=
-[7]: https://github.com/coinbase/rosetta-specifications/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
-[8]: https://github.com/coinbase/rosetta-specifications/pulls
-[9]: https://github.com/coinbase/rosetta-specifications/compare
+[5]: https://github.com/coinbase/mesh-specifications/issues/new/choose
+[6]: https://github.com/coinbase/mesh-specifications/issues/new?assignees=&labels=bug&template=bug_report.md&title=
+[7]: https://github.com/coinbase/mesh-specifications/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
+[8]: https://github.com/coinbase/mesh-specifications/pulls
+[9]: https://github.com/coinbase/mesh-specifications/compare
 [10]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-an-issue
 [11]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-a-pull-request
 [12]: https://hackerone.com/coinbase
-[13]: https://community.rosetta-api.org
-[14]: https://github.com/coinbase/rosetta-specifications/security
+[13]: https://community.mesh-api.org
+[14]: https://github.com/coinbase/mesh-specifications/security
