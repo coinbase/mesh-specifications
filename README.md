@@ -23,16 +23,6 @@ No installation is required, as the repository only includes specification files
 
 You can find the Mesh API documentation at [mesh-api.org](https://www.mesh-api.org/docs/welcome.html). 
 
-Check out the [Getting Started](https://www.mesh-api.org/docs/getting_started.html) section to start diving into Mesh. 
-
-Our documentation is divided into the following sections:
-
-* [Product Overview](https://www.mesh-api.org/docs/welcome.html)
-* [Getting Started](https://www.mesh-api.org/docs/getting_started.html)
-* [Mesh API Spec](https://www.mesh-api.org/docs/Reference.html)
-* [Testing](https://www.mesh-api.org/docs/rosetta_cli.html)
-* [Best Practices](https://www.mesh-api.org/docs/node_deployment.html)
-* [Repositories](https://www.mesh-api.org/docs/rosetta_specifications.html)
 
 ## Contributing
 
