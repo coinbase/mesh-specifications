@@ -82,5 +82,4 @@ All support requests must be made via [our support team][3].
 [10]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-an-issue
 [11]: https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request#creating-a-pull-request
 [12]: https://hackerone.com/coinbase
-[13]: https://community.mesh-api.org
-[14]: https://github.com/coinbase/mesh-specifications/security
+[13]: https://github.com/coinbase/mesh-specifications/security
