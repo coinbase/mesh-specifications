@@ -472,6 +472,58 @@
         }
       }
     },
+   "/construction/preprocess_operations": {
+     "post": {
+       "summary":"Parse High-Level Construction Operations",
+       "description":"PreprocessOperations is called to parse and validate high-level transaction construction operations into Rosetta operations. This endpoint allows the Rosetta implementation to handle operation parsing that might not be supported by local client-side parsers. This endpoint is OPTIONAL and implementations can return HTTP 501 (Not Implemented) if they don't support this functionality. The input format matches TransactionConstructOpInput used by chainstdio, and the output format matches the return values of ParseTransactionConstructOp to maintain compatibility with existing operation parsing workflows.",
+       "operationId":"constructionPreprocessOperations",
+       "tags": [
+         "Construction"
+        ],
+       "requestBody": {
+         "required": true,
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref":"#/components/schemas/ConstructionPreprocessOperationsRequest"
+              }
+            }
+          }
+        },
+       "responses": {
+         "200": {
+           "description":"Expected response to a valid request",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/ConstructionPreprocessOperationsResponse"
+                }
+              }
+            }
+          },
+         "500": {
+           "description":"unexpected error",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/Error"
+                }
+              }
+            }
+          },
+         "501": {
+           "description":"Not Implemented - This endpoint is optional",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
    "/construction/metadata": {
      "post": {
        "summary":"Get Metadata for Transaction Construction",
@@ -2038,6 +2090,56 @@
            "items": {
              "$ref":"#/components/schemas/AccountIdentifier"
             }
+          }
+        }
+      },
+     "ConstructionPreprocessOperationsRequest": {
+       "description":"ConstructionPreprocessOperationsRequest is passed to the `/construction/preprocess_operations` endpoint so that a Rosetta implementation can parse high-level transaction construction operations into Rosetta operations. This endpoint allows the Rosetta API to handle operation parsing that might not be supported by the local OperationSelector.",
+       "type":"object",
+       "required": [
+         "network_identifier",
+         "construct_op"
+        ],
+       "properties": {
+         "network_identifier": {
+           "$ref":"#/components/schemas/NetworkIdentifier"
+          },
+         "from_address": {
+           "type":"string",
+           "description":"The address that will be the source of the transaction. This is optional and may not be required for all construct operations."
+          },
+         "construct_op": {
+           "type":"string",
+           "description":"The high-level operation type to be parsed (e.g. \"transfer\", \"stake\", \"delegate\")."
+          },
+         "options": {
+           "type":"object",
+           "description":"Operation-specific parameters as a JSON object. The format of this object is specific to the construct_op type and the blockchain implementation."
+          }
+        }
+      },
+     "ConstructionPreprocessOperationsResponse": {
+       "description":"ConstructionPreprocessOperationsResponse contains the parsed operations and related information returned by the Rosetta implementation after processing the high-level transaction construction request. This response mirrors the return values of ParseTransactionConstructOp method to maintain compatibility.",
+       "type":"object",
+       "required": [
+         "operations"
+        ],
+       "properties": {
+         "operations": {
+           "type":"array",
+           "items": {
+             "$ref":"#/components/schemas/Operation"
+            },
+           "description":"The parsed operations that result from processing the construct_op."
+          },
+         "max_fee": {
+           "$ref":"#/components/schemas/Amount",
+           "description":"Maximum fee for this transaction (optional)."
+          },
+         "metadata": {
+           "type":"string",
+           "format":"byte",
+           "description":"Metadata as raw JSON bytes, matching ParseTransactionConstructOp return format for compatibility with existing workflows."
           }
         }
       },
