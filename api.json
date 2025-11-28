@@ -514,7 +514,7 @@
         }
       }
     },
-   "/construction/preprocess_operations": {
+   "/construction/preprocess-operations": {
      "post": {
        "summary":"Parse High-Level Construction Operations",
        "description":"PreprocessOperations is called to parse and validate high-level transaction construction operations into Rosetta operations. This endpoint allows the Rosetta implementation to handle operation parsing that might not be supported by local client-side parsers. This endpoint is OPTIONAL and implementations can return HTTP 501 (Not Implemented) if they don't support this functionality. The input format matches TransactionConstructOpInput used by chainstdio, and the output format matches the return values of ParseTransactionConstructOp to maintain compatibility with existing operation parsing workflows.",
@@ -2217,7 +2217,7 @@
         }
       },
      "ConstructionPreprocessOperationsRequest": {
-       "description":"ConstructionPreprocessOperationsRequest is passed to the `/construction/preprocess_operations` endpoint so that a Rosetta implementation can parse high-level transaction construction operations into Rosetta operations. This endpoint allows the Rosetta API to handle operation parsing that might not be supported by the local OperationSelector.",
+       "description":"ConstructionPreprocessOperationsRequest is passed to the `/construction/preprocess-operations` endpoint so that a Rosetta implementation can parse high-level transaction construction operations into Rosetta operations. This endpoint allows the Rosetta API to handle operation parsing that might not be supported by the local OperationSelector.",
        "type":"object",
        "required": [
          "network_identifier",
