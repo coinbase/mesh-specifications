@@ -346,6 +346,48 @@
         }
       }
     },
+   "/account/all-balances": {
+     "post": {
+       "summary":"Get All Account Balances",
+       "description":"Get an array of all AccountBalances for all sub-accounts of an AccountIdentifier and the BlockIdentifier at which the balance lookup was performed. This endpoint returns balances for the main account and all associated sub-accounts in a single request, eliminating the need to make multiple individual /account/balance calls. The BlockIdentifier must always be returned because some consumers of account balance data need to know specifically at which block the balance was calculated to compare balances they compute from operations with the balance returned by the node. This endpoint automatically returns all available sub-account types for the given account, including the main account balance and all sub-accounts (e.g., delegated, unbonding, rewards, etc.). It is also possible to perform a historical balance lookup (if the server supports it) by passing in an optional BlockIdentifier. This endpoint provides better performance and consistency compared to making multiple individual /account/balance requests, as all balances are guaranteed to be from the same block context.",
+       "operationId":"allAccountBalances",
+       "tags": [
+         "Account"
+        ],
+       "requestBody": {
+         "required": true,
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref":"#/components/schemas/AllAccountBalancesRequest"
+              }
+            }
+          }
+        },
+       "responses": {
+         "200": {
+           "description":"Expected response to a valid request",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/AllAccountBalancesResponse"
+                }
+              }
+            }
+          },
+         "500": {
+           "description":"unexpected error",
+           "content": {
+             "application/json": {
+               "schema": {
+                 "$ref":"#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
    "/account/coins": {
      "post": {
        "summary":"Get an Account's Unspent Coins",
@@ -1717,6 +1759,87 @@
            "example": {
              "sequence_number": 23
             }
+          }
+        }
+      },
+     "AllAccountBalancesRequest": {
+       "description":"An AllAccountBalancesRequest is utilized to make a balance request for all sub-accounts on the /account/all-balances endpoint. This endpoint returns balances for the main account and all associated sub-accounts in a single request, eliminating the need to make multiple individual /account/balance calls for each sub-account. The endpoint automatically returns all available sub-account types for the given account. If the block_identifier is populated, a historical balance query should be performed.",
+       "type":"object",
+       "required": [
+         "network_identifier",
+         "account_identifier"
+        ],
+       "properties": {
+         "network_identifier": {
+           "$ref":"#/components/schemas/NetworkIdentifier"
+          },
+         "account_identifier": {
+           "$ref":"#/components/schemas/AccountIdentifier"
+          },
+         "block_identifier": {
+           "$ref":"#/components/schemas/PartialBlockIdentifier"
+          },
+         "currencies": {
+           "type":"array",
+           "description":"In some cases, the caller may not want to retrieve all available balances for an AccountIdentifier. If the currencies field is populated, only balances for the specified currencies will be returned. If not populated, all available balances will be returned.",
+           "items": {
+             "$ref":"#/components/schemas/Currency"
+            }
+          }
+        }
+      },
+     "AllAccountBalancesResponse": {
+       "description":"An AllAccountBalancesResponse is returned on the /account/all-balances endpoint. It contains balances for the main account and all associated sub-accounts, along with their respective sub-account identifiers and balance types. This response provides all account balances in a single request, eliminating the need for multiple calls to /account/balance with different sub-account identifiers.",
+       "type":"object",
+       "required": [
+         "block_identifier",
+         "account_balances"
+        ],
+       "properties": {
+         "block_identifier": {
+           "$ref":"#/components/schemas/BlockIdentifier"
+          },
+         "account_balances": {
+           "type":"array",
+           "description":"Array of account balances including main account and all sub-accounts. Each balance includes the sub-account identifier and balance type information.",
+           "items": {
+             "$ref":"#/components/schemas/AccountBalanceWithSubAccount"
+            }
+          },
+         "metadata": {
+           "description":"Account-based blockchains that utilize a nonce or sequence number should include that number in the metadata. This number could be unique to the identifier or global across the account address.",
+           "type":"object",
+           "example": {
+             "sequence_number": 23
+            }
+          }
+        }
+      },
+     "AccountBalanceWithSubAccount": {
+       "description":"Represents a balance for a specific account or sub-account, including the sub-account identifier and balance type information.",
+       "type":"object",
+       "required": [
+         "balances"
+        ],
+       "properties": {
+         "sub_account_identifier": {
+           "$ref":"#/components/schemas/SubAccountIdentifier"
+          },
+         "balances": {
+           "type":"array",
+           "description":"A single account/sub-account may have a balance in multiple currencies.",
+           "items": {
+             "$ref":"#/components/schemas/Amount"
+            }
+          },
+         "balance_type": {
+           "type":"string",
+           "description":"The type of balance (e.g., spendable, delegated, pending_undelegation, etc.)",
+           "example":"spendable"
+          },
+         "metadata": {
+           "description":"Sub-account specific metadata",
+           "type":"object"
           }
         }
       },
