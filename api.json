@@ -1801,7 +1801,7 @@
           },
          "account_balances": {
            "type":"array",
-           "description":"Array of account balances including main account and all sub-accounts. Each balance includes the sub-account identifier and balance type information.",
+           "description":"Array of account balances including main account and all sub-accounts. Each balance includes balance type information and metadata.",
            "items": {
              "$ref":"#/components/schemas/AccountBalanceWithSubAccount"
             }
@@ -1809,15 +1809,12 @@
         }
       },
      "AccountBalanceWithSubAccount": {
-       "description":"Represents a balance for a specific account or sub-account, including the sub-account identifier and balance type information.",
+       "description":"Represents a balance for a specific account or sub-account, including balance type information and metadata.",
        "type":"object",
        "required": [
          "balances"
         ],
        "properties": {
-         "sub_account_identifier": {
-           "$ref":"#/components/schemas/SubAccountIdentifier"
-          },
          "balances": {
            "type":"array",
            "description":"A single account/sub-account may have a balance in multiple currencies.",
