@@ -21,6 +21,7 @@ description: |
   * schnorr_1: `r (32-bytes) || s (32-bytes)` - `64 bytes`  (schnorr signature implemented by Zilliqa where both `r` and `s` are scalars encoded as `32-bytes` values, most significant byte first.)
   * schnorr_bip340: `r (32-bytes) || s (32-bytes)` - `64 bytes`  (sig = (bytes(R) || bytes((k + ed) mod n) where `r` is the `X` coordinate of a point `R` whose `Y` coordinate is even, most significant bytes first.)
   * schnorr_poseidon: `r (32-bytes) || s (32-bytes)` where s = Hash(1st pk || 2nd pk || r) - `64 bytes`  (schnorr signature w/ Poseidon hash function implemented by O(1) Labs where both `r` and `s` are scalars encoded as `32-bytes` values, least significant byte first. https://github.com/CodaProtocol/signer-reference/blob/master/schnorr.ml )
+  * ml_dsa_65: FIPS 204 ML-DSA-65 post-quantum signature - `3309 bytes` (https://csrc.nist.gov/pubs/fips/204/final). Lattice-based, fixed-size byte string defined by FIPS 204 §3 (no internal field decomposition is exposed at this layer).
 type: string
 enum:
   - ecdsa
@@ -29,3 +30,4 @@ enum:
   - schnorr_1
   - schnorr_bip340
   - schnorr_poseidon
+  - ml_dsa_65
